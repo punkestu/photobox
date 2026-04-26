@@ -1,6 +1,6 @@
-export function Gallery({images, deleteImage}) {
+export function Gallery({className, images, deleteImage}) {
   return (
-    <div className="h-full overflow-y-auto flex flex-col gap-2 pe-4 py-4 w-1/4">
+    <div className={className + " h-full overflow-y-auto flex flex-col gap-2 pe-4 py-4"}>
       {images.map((img, index) => (
         <div className="relative" key={index}>
           <button

@@ -8,6 +8,9 @@ export function Camera({ className, saveImage, process, galleryIsFull }) {
   const [image, setImage] = useState(null);
 
   const capture = () => {
+    if (timer > 0) {
+      return;
+    }
     setTimer(3);
     setTimeout(() => {
       setFlash(true);
@@ -28,8 +31,7 @@ export function Camera({ className, saveImage, process, galleryIsFull }) {
         ctx.setTransform(1, 0, 0, 1, 0, 0);
 
         // postprocess
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        // applyFilter(ctx, canvas);
+        var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         ctx.putImageData(imageData, 0, 0);
 
         const img = canvas.toDataURL("image/png");
@@ -56,7 +58,9 @@ export function Camera({ className, saveImage, process, galleryIsFull }) {
           },
         })
         .then((stream) => {
-          videoRef.current.srcObject = stream;
+          if (videoRef.current) {
+            videoRef.current.srcObject = stream;
+          }
         });
     } catch (err) {
       console.error(err);
@@ -106,12 +110,11 @@ export function Camera({ className, saveImage, process, galleryIsFull }) {
         >
           <button
             className={
-              "w-full h-full text-black font-semibold rounded-lg flex flex-col text-2xl justify-center items-center " +
-              (timer > 0 ? "" : "bg-white/25")
+              "w-full h-full text-black font-semibold rounded-lg flex flex-col text-2xl justify-center items-center"
             }
             onClick={() =>
               !galleryIsFull
-                ? capture({ prerun: () => setTimer(3) })
+                ? capture()
                 : process()
             }
           >
