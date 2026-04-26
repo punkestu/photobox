@@ -7,16 +7,21 @@ import { useNavigate } from "react-router";
 
 export function useCamera() {
   const [images, setImages] = useState([]);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [credential] = useContext(credentialProvider);
   const navigate = useNavigate();
 
   const process = async () => {
-    postImage(images, credential).then((url) =>
-      navigate(`/finish?url=${encodeURIComponent(url)}`),
-    );
+    if (isProcessing) return;
+    setIsProcessing(true);
+    postImage(images, credential).then((url) => {
+      setIsProcessing(false);
+      navigate(`/finish?url=${encodeURIComponent(url)}`);
+    });
   };
   return [
     images,
+    isProcessing,
     function ({ className }) {
       return (
         <Camera
