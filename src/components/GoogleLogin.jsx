@@ -9,7 +9,8 @@ export function GoogleLoginButton() {
   }, [setCredential]);
 
   const login = useGoogleLogin({
-    scope: "",
+    scope: "https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.appdata https://www.googleapis.com/auth/drive.file",
+    prompt: "consent",
     onSuccess: (tokenResponse) => {
       setCredential(tokenResponse.access_token);
       localStorage.setItem("credential", tokenResponse.access_token);
