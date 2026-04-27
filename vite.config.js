@@ -39,7 +39,9 @@ export default defineConfig({
             "sizes": "390x844",
             "type": "image/png"
           }
-        ]
+        ],
+        "display": "fullscreen",
+        "orientation": "portrait"
       }
     }),
     react(),
