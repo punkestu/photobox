@@ -97,7 +97,7 @@ export function Camera({ className, saveImage, process, galleryIsFull }) {
           </svg>
         </div>
       )}
-      <aside className={className + " relative overflow-hidden m-4"}>
+      <aside className={className + " relative overflow-hidden m-4 bg-red-700"}>
         <video
           ref={videoRef}
           autoPlay

@@ -2,6 +2,7 @@ import {
   BrowserRouter,
   Route,
   Routes,
+  useLocation,
   useNavigate,
 } from "react-router";
 import {
@@ -12,12 +13,17 @@ import App from "./pages/App";
 import Login from "./pages/Login";
 import { useContext, useEffect } from "react";
 import GetDrive from "./pages/GetDrive";
+import Welcome from "./pages/Welcome";
+import Finish from "./pages/Finish";
+import TestFrame from "./pages/TestFrame";
 
 export function Entry() {
   const [credential, setCredential] = useContext(credentialProvider);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
+    if (location.pathname == "/test-frame") return;
     const expiresAt = localStorage.getItem("credential_expires_at");
 
     // No credential → login
@@ -36,12 +42,15 @@ export function Entry() {
     }
 
     // Valid → DO NOTHING (let user navigate freely)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [credential, setCredential, navigate]);
   return (
     <Routes>
-      <Route path="/" element={<App />} />
-      <Route path="/finish" element={<GetDrive />} />
+      <Route path="/" element={<Welcome />} />
+      <Route path="/app" element={<App />} />
+      <Route path="/finish" element={<Finish />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/test-frame" element={<TestFrame />} />
     </Routes>
   );
 }

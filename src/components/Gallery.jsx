@@ -1,8 +1,8 @@
 export function Gallery({className, images, deleteImage}) {
   return (
-    <div className={className + " h-full overflow-y-auto flex flex-col gap-2 pe-4 py-4"}>
+    <div className={className + " overflow-y-auto grid grid-cols-6 gap-2 p-2"}>
       {images.map((img, index) => (
-        <div className="relative" key={index}>
+        <div className={`relative ${index == 0 ? "col-start-2" : ""}`} key={index}>
           <button
             className="absolute top-0 left-0 h-full w-full hover:bg-white/75 opacity-0 hover:opacity-100 duration-100 z-10 rounded-lg flex justify-center items-center"
             onClick={() => deleteImage(index)}

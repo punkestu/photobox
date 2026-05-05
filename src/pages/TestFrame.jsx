@@ -1,0 +1,254 @@
+import { useCallback, useEffect, useRef, useState } from "react";
+
+export default function TestFrame() {
+  const canvasRef = useRef(null);
+  const [imgCount, setImageCount] = useState(4);
+  const [frameUrl, setFrameUrl] = useState("/example_frame.png");
+  const [frame, setFrame] = useState(null);
+  const [positions, setPositions] = useState(
+    Array.from({ length: imgCount }, (_, i) => ({
+      x: 0,
+      y: i * 150,
+      w: 150,
+      h: 150,
+    })),
+  );
+
+  useEffect(() => {
+    const timeoutID = setTimeout(async function () {
+      setFrame(
+        await new Promise((resolve) => {
+          const img = new Image();
+          img.src = frameUrl;
+          img.onload = () => resolve(img);
+        }),
+      );
+    }, 1000);
+    return () => clearTimeout(timeoutID);
+  }, [frameUrl]);
+
+  useCallback(() => {
+    setPositions((prev) => {
+      if (prev.length > imgCount) {
+        return prev.slice(0, imgCount);
+      }
+      return [
+        ...prev,
+        new Array(imgCount - prev.length).fill(null).map(() => ({
+          x: 0,
+          y: 0,
+          w: 150,
+          h: 150,
+        })),
+      ];
+    });
+  }, [imgCount]);
+
+  useEffect(() => {
+    if (imgCount < 1 || imgCount > 4 || !frame) return;
+
+    const loadImages = async () => {
+      const loaded = await Promise.all(
+        Array.from({ length: imgCount }, (_, i) => i + 1).map((index) => {
+          return new Promise((resolve) => {
+            const img = new Image();
+            img.src = `/placeholder${index}.png`; // data URL langsung dipakai
+            img.onload = () => resolve(img);
+          });
+        }),
+      );
+      if (canvasRef.current) {
+        renderImagesWithFrame(canvasRef.current, loaded, frame, positions);
+      }
+    };
+    loadImages();
+  }, [canvasRef, imgCount, positions, frame]);
+  return (
+    <main className="h-screen w-screen bg-red-900 bg-halftone flex">
+      <aside className="grow p-2 flex flex-col gap-4 m-2 border-2 border-red-700 rounded-xl">
+        <div className="bg-white rounded-lg p-2 flex justify-between items-center gap-2">
+          <h1>Edit Frame</h1>
+          <button
+            className="border border-red-700 text-red-700 px-2 py-1 rounded-lg cursor-pointer"
+            onClick={() => {
+              downloadJSON(positions);
+            }}
+          >
+            Export
+          </button>
+        </div>
+        <div className="bg-white rounded-lg p-2 flex items-center gap-2">
+          Frame URL:
+          <input
+            className="border rounded-lg p-1 px-2"
+            type="text"
+            value={frameUrl}
+            onChange={(e) => setFrameUrl(e.target.value)}
+          />
+        </div>
+        <div className="bg-white rounded-lg p-2 flex items-center gap-2">
+          Jumlah Foto:
+          <input
+            className="border rounded-lg p-1 px-2"
+            type="number"
+            value={imgCount}
+            onChange={(e) => {
+              if (e.target.value > 0) {
+                setImageCount(e.target.value);
+              }
+            }}
+          />
+        </div>
+        {positions.map((position, i) => (
+          <div key={i} className="bg-white rounded-lg p-2">
+            <p key={i}>Image {i + 1}</p>
+            <div className="flex gap-2 items-center mb-2">
+              <p className="w-10">X,Y:</p>
+              <input
+                type="number"
+                className="border rounded-lg p-1 px-2 w-28"
+                value={position.x}
+                onChange={(e) =>
+                  setPositions((prev) =>
+                    prev.map((p, j) => {
+                      if (j == i) {
+                        return {
+                          ...p,
+                          x: e.target.value,
+                        };
+                      }
+                      return p;
+                    }),
+                  )
+                }
+              />
+              ,
+              <input
+                type="number"
+                className="border rounded-lg p-1 px-2 w-28"
+                value={position.y}
+                onChange={(e) =>
+                  setPositions((prev) =>
+                    prev.map((p, j) => {
+                      if (j == i) {
+                        return {
+                          ...p,
+                          y: e.target.value,
+                        };
+                      }
+                      return p;
+                    }),
+                  )
+                }
+              />
+            </div>
+            <div className="flex gap-2 items-center">
+              <p className="w-10">W,H:</p>
+              <input
+                type="number"
+                className="border rounded-lg p-1 px-2 w-28"
+                value={position.w}
+                onChange={(e) =>
+                  setPositions((prev) =>
+                    prev.map((p, j) => {
+                      if (j == i) {
+                        return {
+                          ...p,
+                          w: e.target.value,
+                        };
+                      }
+                      return p;
+                    }),
+                  )
+                }
+              />
+              ,
+              <input
+                type="number"
+                className="border rounded-lg p-1 px-2 w-28"
+                value={position.h}
+                onChange={(e) =>
+                  setPositions((prev) =>
+                    prev.map((p, j) => {
+                      if (j == i) {
+                        return {
+                          ...p,
+                          h: e.target.value,
+                        };
+                      }
+                      return p;
+                    }),
+                  )
+                }
+              />
+            </div>
+          </div>
+        ))}
+      </aside>
+      <aside className="w-140 m-2 p-2 border-2 border-red-700 rounded-xl overflow-auto">
+        <div className="scale-50 origin-top">
+          <canvas ref={canvasRef}></canvas>
+        </div>
+      </aside>
+    </main>
+  );
+}
+
+function renderImagesWithFrame(canvas, images, frame, positions) {
+  const ctx = canvas.getContext("2d");
+  // contoh: set size canvas
+  canvas.width = frame.width;
+  canvas.height = frame.height;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  images.forEach((img, i) => {
+    if (!positions[i]) return;
+    const x = positions[i].x ?? 0;
+    const y = positions[i].y ?? i * 150;
+    const w = positions[i].w ?? 150;
+    const h = positions[i].h ?? 150;
+    drawImageCover(ctx, img, x, y, w, h);
+  });
+  ctx.drawImage(frame, 0, 0);
+}
+
+function drawImageCover(ctx, img, x, y, width, height) {
+  const imgRatio = img.width / img.height;
+  const canvasRatio = width / height;
+
+  let sx, sy, sWidth, sHeight;
+
+  if (imgRatio > canvasRatio) {
+    // gambar lebih lebar → crop kiri kanan
+    sHeight = img.height;
+    sWidth = img.height * canvasRatio;
+    sx = (img.width - sWidth) / 2;
+    sy = 0;
+  } else {
+    // gambar lebih tinggi → crop atas bawah
+    sWidth = img.width;
+    sHeight = img.width / canvasRatio;
+    sx = 0;
+    sy = (img.height - sHeight) / 2;
+  }
+
+  ctx.drawImage(img, sx, sy, sWidth, sHeight, x, y, width, height);
+}
+
+function downloadJSON(data, filename = "data.json") {
+  const jsonString = JSON.stringify(data, null, 2); // pretty print
+
+  const blob = new Blob([jsonString], {
+    type: "application/json",
+  });
+
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+
+  URL.revokeObjectURL(url);
+}

@@ -1,34 +1,26 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { Camera } from "../components/Camera";
 import { Gallery } from "../components/Gallery";
-import { postImage } from "../utils/googleDrive";
-import { credentialProvider } from "./useGoogleProvider";
 import { useNavigate } from "react-router";
+import { memoryProvider } from "./useMemoryProvider";
+
+const max_gallery = 4;
 
 export function useCamera() {
-  const [images, setImages] = useState([]);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [credential] = useContext(credentialProvider);
+  const [images, setImages] = useContext(memoryProvider);
   const navigate = useNavigate();
 
   const process = async () => {
-    if (isProcessing) return;
-    setIsProcessing(true);
-    postImage(images, credential).then((url) => {
-      setIsProcessing(false);
-      navigate(`/finish?url=${encodeURIComponent(url)}`);
-    });
+    navigate("/finish");
   };
   return [
-    images,
-    isProcessing,
     function ({ className }) {
       return (
         <Camera
           className={className}
           saveImage={(img) => setImages((prev) => [...prev, img])}
           process={process}
-          galleryIsFull={images.length >= 4}
+          galleryIsFull={images.length >= max_gallery}
         />
       );
     },
