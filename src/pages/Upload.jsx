@@ -18,16 +18,18 @@ export default function Upload() {
 
   useEffect(() => {
     if (location.pathname == "/upload") {
-      postImage(images, credential).then((url) => {
-        setUrl(url);
-      });
+      postImage(images, credential)
+        .then((url) => {
+          setUrl(url);
+        })
+        .catch((e) => alert(e.message));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
   const [memory] = useContext(memoryProvider);
 
   if (url == "") {
-    return <Loading />
+    return <Loading />;
   }
   return (
     <main className="w-screen h-screen flex gap-4 bg-red-900 bg-halftone relative">

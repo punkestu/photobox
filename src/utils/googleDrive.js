@@ -1,4 +1,17 @@
 export const postImage = async (images, credential) => {
+  let retry = 0;
+  while (retry < 3) {
+    try {
+      const result = await postImageFn(images, credential);
+      return result;
+    } catch {
+      retry++;
+    }
+  }
+  throw new Error("Failed to upload image. Call admin");
+}
+
+const postImageFn = async (images, credential) => {
   const folderName = "PhotoboxMicroapesTest";
 
   let folder = await checkFolder(folderName, credential);
@@ -47,8 +60,8 @@ export const postImage = async (images, credential) => {
 async function checkFolder(folderName, credential, folderId = null) {
   const query = encodeURIComponent(
     (folderId ? `'${folderId}' in parents and ` : "") +
-      `mimeType='application/vnd.google-apps.folder' and ` +
-      `name='${folderName}' and trashed=false`,
+    `mimeType='application/vnd.google-apps.folder' and ` +
+    `name='${folderName}' and trashed=false`,
   );
   const res = await fetch(
     `https://www.googleapis.com/drive/v3/files?q=${query}`,
