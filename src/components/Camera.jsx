@@ -1,18 +1,27 @@
 import { useEffect, useRef, useState } from "react";
+import Shutter from "../assets/shutter.mp3";
+
+const timerCount = 3;
 
 export function Camera({ className, saveImage, process, galleryIsFull }) {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [timer, setTimer] = useState(0);
   const [flash, setFlash] = useState(false);
-  const [image, setImage] = useState(null);
+  const [flashDim, setFlashDim] = useState(false);
+  const playSound = () => {
+    const audio = new Audio(Shutter);
+    audio.play();
+  };
 
   const capture = () => {
     if (timer > 0) {
       return;
     }
-    setTimer(3);
+    setTimer(timerCount);
     setTimeout(() => {
+      playSound();
+      setFlashDim(true);
       setFlash(true);
       setTimeout(() => {
         const video = videoRef.current;
@@ -34,18 +43,16 @@ export function Camera({ className, saveImage, process, galleryIsFull }) {
         var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         ctx.putImageData(imageData, 0, 0);
 
-        const img = canvas.toDataURL("image/png");
-        setImage(img);
         setFlash(false);
-      }, 500);
+        setTimeout(() => {
+          setFlashDim(false);
+          const img = canvas.toDataURL("image/png");
+          saveImage(img);
+        }, 700);
+      }, 1000);
     }, 3000);
   };
 
-  useEffect(() => {
-    if (image) {
-      saveImage(image);
-    }
-  }, [image, saveImage]);
   useEffect(() => {
     try {
       navigator.mediaDevices
@@ -54,7 +61,7 @@ export function Camera({ className, saveImage, process, galleryIsFull }) {
             width: 1280,
             height: 720,
             facingMode: "user",
-            // noiseSuppression: true,
+            noiseSuppression: true,
           },
         })
         .then((stream) => {
@@ -80,24 +87,24 @@ export function Camera({ className, saveImage, process, galleryIsFull }) {
   }, [timer]);
   return (
     <>
-      {flash && (
-        <div className="w-screen h-screen absolute left-0 top-0 flex justify-center items-center bg-white z-1000">
-          <svg
-            className="w-42"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 640 640"
-          >
-            {
-              "<!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->"
-            }
-            <path
-              fill="rgb(255, 212, 59)"
-              d="M128 320L156.5 92C158.5 76 172.1 64 188.3 64L356.9 64C371.9 64 384 76.1 384 91.1C384 94.3 383.4 97.6 382.3 100.6L336 224L475.3 224C495.5 224 512 240.4 512 260.7C512 268.1 509.8 275.3 505.6 281.4L313.4 562.4C307.5 571 297.8 576.1 287.5 576.1L284.6 576.1C268.9 576.1 256.1 563.3 256.1 547.6C256.1 545.3 256.4 543 257 540.7L304 352L160 352C142.3 352 128 337.7 128 320z"
-            />
-          </svg>
-        </div>
-      )}
-      <aside className={className + " relative overflow-hidden m-4 bg-red-700"}>
+      <div
+        className={`w-screen h-screen absolute left-0 top-0 flex justify-center items-center bg-white ${flash ? "opacity-100" : "duration-700 opacity-0"} ${flashDim ? "z-1000" : ""}`}
+      >
+        <svg
+          className="w-42"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 640 640"
+        >
+          {
+            "<!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->"
+          }
+          <path
+            fill="rgb(255, 212, 59)"
+            d="M128 320L156.5 92C158.5 76 172.1 64 188.3 64L356.9 64C371.9 64 384 76.1 384 91.1C384 94.3 383.4 97.6 382.3 100.6L336 224L475.3 224C495.5 224 512 240.4 512 260.7C512 268.1 509.8 275.3 505.6 281.4L313.4 562.4C307.5 571 297.8 576.1 287.5 576.1L284.6 576.1C268.9 576.1 256.1 563.3 256.1 547.6C256.1 545.3 256.4 543 257 540.7L304 352L160 352C142.3 352 128 337.7 128 320z"
+          />
+        </svg>
+      </div>
+      <aside className={className + " relative overflow-hidden m-4 bg-red-700 rounded-lg"}>
         <video
           ref={videoRef}
           autoPlay
@@ -112,11 +119,7 @@ export function Camera({ className, saveImage, process, galleryIsFull }) {
             className={
               "w-full h-full text-black font-semibold rounded-lg flex flex-col text-2xl justify-center items-center"
             }
-            onClick={() =>
-              !galleryIsFull
-                ? capture()
-                : process()
-            }
+            onClick={() => (!galleryIsFull ? capture() : process())}
           >
             {timer > 0 ? (
               <span className="text-9xl font-black opacity-60 bg-white/75 w-42 aspect-square flex justify-center items-center rounded-full">

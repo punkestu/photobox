@@ -1,4 +1,5 @@
 export function Gallery({className, images, deleteImage}) {
+  console.log(images);
   return (
     <div className={className + " overflow-y-auto grid grid-cols-6 gap-2 p-2"}>
       {images.map((img, index) => (

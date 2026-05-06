@@ -77,16 +77,20 @@ export default function Finish() {
         />
       </aside>
       <aside className="w-140 m-2 p-4 border-2 border-red-700 rounded-xl overflow-auto relative">
-        <div className={`${selectedFrame ? "" : "hidden"} w-full`}>
-          <canvas ref={canvasRef} className="w-full"></canvas>
-        </div>
-        {!selectedFrame && (
-          <p className="bg-white p-4 rounded-lg text-center">
+        {!selectedFrame ? (
+          <p className="bg-white p-4 rounded-lg text-center h-full flex justify-center items-center font-sef text-3xl text-red-900">
             Pilih frame terlebih dahulu!
           </p>
+        ) : (
+          <div className="p-4 w-full h-full font-sef text-3xl text-red-900 absolute top-0 left-0">
+            <p className="bg-white rounded-lg text-center w-full h-full flex justify-center items-center">Memproses...</p>
+          </div>
         )}
+        <div className={`${selectedFrame ? "absolute top-0 left-0" : "hidden"} p-4 w-full z-10`}>
+          <canvas ref={canvasRef} className="w-full"></canvas>
+        </div>
       </aside>
-      <div className="absolute bottom-0 left-0 w-full flex justify-end p-4">
+      <div className="absolute bottom-0 left-0 w-full flex justify-end p-4 z-20">
         <button
           className="px-4 py-2 bg-white font-sef text-2xl text-red-900 border-2 border-red-900 rounded-xl"
           onClick={finish}
@@ -104,13 +108,19 @@ function Frames({ selectedFrame, setSelectedFrame }) {
 
   useEffect(() => {
     GetFrames().then((frames) => {
-      setFrames(frames.data);
-      setIsLoading(false);
+      setTimeout(() => {
+        setFrames(frames.data);
+        setIsLoading(false);
+      }, 50);
     });
   }, []);
 
   if (isLoading) {
-    return <>Loading...</>;
+    return (
+      <p className="h-full w-full flex justify-center items-center bg-white text-red-900 font-sef text-3xl rounded-lg">
+        Loading...
+      </p>
+    );
   }
   return frames.map((frame) => (
     <button
