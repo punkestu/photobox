@@ -186,8 +186,8 @@ export default function TestFrame() {
         ))}
       </aside>
       <aside className="w-140 m-2 p-2 border-2 border-red-700 rounded-xl overflow-auto">
-        <div className="scale-50 origin-top">
-          <canvas ref={canvasRef}></canvas>
+        <div className="w-full">
+          <canvas ref={canvasRef} className="w-full"></canvas>
         </div>
       </aside>
     </main>
@@ -196,9 +196,9 @@ export default function TestFrame() {
 
 function renderImagesWithFrame(canvas, images, frame, positions) {
   const ctx = canvas.getContext("2d");
-  // contoh: set size canvas
-  canvas.width = frame.width;
-  canvas.height = frame.height;
+  
+  const scale = canvas.width / frame.width;
+  canvas.height = frame.height * scale;
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -208,9 +208,9 @@ function renderImagesWithFrame(canvas, images, frame, positions) {
     const y = positions[i].y ?? i * 150;
     const w = positions[i].w ?? 150;
     const h = positions[i].h ?? 150;
-    drawImageCover(ctx, img, x, y, w, h);
+    drawImageCover(ctx, img, x * scale, y * scale, w * scale, h * scale);
   });
-  ctx.drawImage(frame, 0, 0);
+  drawImageCover(ctx, frame, 0 * scale, 0 * scale, frame.width * scale, frame.height * scale);
 }
 
 function drawImageCover(ctx, img, x, y, width, height) {
