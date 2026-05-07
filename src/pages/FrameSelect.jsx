@@ -63,7 +63,6 @@ export default function FrameSelect() {
   const finish = () => {
     if (!canvasRef.current) return;
     const img = canvasRef.current.toDataURL("image/png");
-    console.log(img);
     setImages((prev) => [...prev, img]);
     navigate("/upload");
   };
@@ -150,6 +149,8 @@ function renderImagesWithFrame(canvas, images, frame, positions) {
   const scale = canvas.width / frameW;
   canvas.height = frameH * scale;
 
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   images.forEach((img, i) => {

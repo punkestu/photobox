@@ -17,7 +17,7 @@ export default function Upload() {
   };
 
   useEffect(() => {
-    if (location.pathname == "/upload") {
+    if (location.pathname == "/upload" && images.length > 0) {
       postImage(images, credential)
         .then((url) => {
           setUrl(url);

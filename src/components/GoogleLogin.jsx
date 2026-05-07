@@ -13,8 +13,20 @@ export function GoogleLoginButton({ className = null }) {
       "https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.appdata https://www.googleapis.com/auth/drive.file",
     prompt: "consent",
     onSuccess: (tokenResponse) => {
+      const containScopes = [
+        "https://www.googleapis.com/auth/drive.file",
+        "https://www.googleapis.com/auth/drive.appdata",
+        "https://www.googleapis.com/auth/drive",
+      ].reduce((acc, scope) => {
+        return acc && tokenResponse.scope.includes(scope);
+      }, true);
+      if (!containScopes) {
+        alert("Izin tidak terpenuhi!");
+        return;
+      }
       setCredential(tokenResponse.access_token);
       localStorage.setItem("credential", tokenResponse.access_token);
+      // localStorage.setItem("refresh_token", tokenResponse.refresh_token);
       localStorage.setItem(
         "credential_expires_at",
         Math.floor(Date.now() / 1000) + tokenResponse.expires_in,
@@ -30,7 +42,11 @@ export function GoogleLoginButton({ className = null }) {
         className={`${className} bg-white border border-red-800 text-red-800 shadow-lg hover:shadow-blue-950/50 rounded-xl px-6 py-2 cursor-pointer font-semibold flex items-center justify-center gap-1`}
         onClick={login}
       >
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" className="w-6">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 640 640"
+          className="w-6"
+        >
           {
             "<!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->"
           }

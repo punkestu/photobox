@@ -31,6 +31,8 @@ export function Camera({ className, saveImage, process, galleryIsFull }) {
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
 
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = "high";
         // mirror selfie
         ctx.translate(canvas.width, 0);
         ctx.scale(-1, 1);
@@ -58,10 +60,17 @@ export function Camera({ className, saveImage, process, galleryIsFull }) {
       navigator.mediaDevices
         .getUserMedia({
           video: {
-            width: 1280,
-            height: 720,
+            width: { ideal: 1920 },
+            height: { ideal: 1080 },
+            frameRate: { ideal: 30, max: 60 },
+
             facingMode: "user",
-            noiseSuppression: true,
+
+            // Optional extras
+            sharpness: true,
+            focusMode: "continuous",
+            exposureMode: "continuous",
+            whiteBalanceMode: "continuous",
           },
         })
         .then((stream) => {
@@ -104,7 +113,11 @@ export function Camera({ className, saveImage, process, galleryIsFull }) {
           />
         </svg>
       </div>
-      <aside className={className + " relative overflow-hidden m-4 bg-red-700 rounded-lg"}>
+      <aside
+        className={
+          className + " relative overflow-hidden m-4 bg-red-700 rounded-lg"
+        }
+      >
         <video
           ref={videoRef}
           autoPlay
