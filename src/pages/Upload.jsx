@@ -1,6 +1,6 @@
 import { QRCodeCanvas } from "qrcode.react";
 import { useContext, useEffect, useState } from "react";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { memoryProvider } from "../hooks/useMemoryProvider";
 import LogoTypo from "../assets/Logo_border_typo.png";
 import { postImage } from "../utils/googleDrive";
@@ -11,13 +11,24 @@ export default function Upload() {
   const [url, setUrl] = useState("");
   const [images] = useContext(memoryProvider);
   const location = useLocation();
-  const [credential] = useContext(credentialProvider);
+  const [credential, setCredential] = useContext(credentialProvider);
+  const navigate = useNavigate();
   const print = () => {
     window.print();
   };
 
   useEffect(() => {
     if (location.pathname == "/upload" && images.length > 0) {
+      const expiresAt = localStorage.getItem("credential_expires_at");
+
+      // Expired → clear + login
+      if (expiresAt && Date.now() / 1000 >= parseInt(expiresAt) - 60) {
+        localStorage.removeItem("credential");
+        localStorage.removeItem("credential_expires_at");
+        setCredential(null);
+        navigate("/login");
+        return;
+      }
       postImage(images, credential)
         .then((url) => {
           setUrl(url);
@@ -42,7 +53,10 @@ export default function Upload() {
         </button>
       </div>
       <aside className="lg:w-1/3 w-full absolute lg:relative p-8 h-full flex lg:justify-center">
-        <img src={memory.at(-1)} className="-rotate-3 w-full h-full object-scale-down" />
+        <img
+          src={memory.at(-1)}
+          className="-rotate-3 w-full h-full object-scale-down"
+        />
       </aside>
       <aside className="grow flex flex-col justify-center items-center gap-4 z-10">
         <QR value={url} />

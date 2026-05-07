@@ -46,7 +46,7 @@ export default function FrameSelect() {
           loaded,
           frame,
           selectedFrame.positions,
-          false
+          false,
         );
       }
 
@@ -78,11 +78,13 @@ export default function FrameSelect() {
 
   return (
     <main className="h-screen w-screen bg-red-900 bg-halftone flex">
-      <aside className="w-2/3 p-2 flex gap-4 m-2 border-2 border-red-700 rounded-xl overflow-auto">
-        <Frames
-          selectedFrame={selectedFrame}
-          setSelectedFrame={setSelectedFrame}
-        />
+      <aside className="w-1/2 md:w-2/3 p-2 m-2 border-2 border-red-700 rounded-xl overflow-auto">
+        <div className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
+          <Frames
+            selectedFrame={selectedFrame}
+            setSelectedFrame={setSelectedFrame}
+          />
+        </div>
       </aside>
       <aside className="grow m-2 p-4 border-2 border-red-700 rounded-xl overflow-auto relative">
         {!selectedFrame && (
@@ -137,10 +139,13 @@ function Frames({ selectedFrame, setSelectedFrame }) {
   return frames.map((frame) => (
     <button
       key={frame.id}
-      className={`${selectedFrame && selectedFrame.id == frame.id ? "border-4" : "border-2"} cursor-pointer w-1/2 h-64 border-red-700 bg-gray-200 rounded-lg overflow-hidden relative`}
+      className={`${selectedFrame && selectedFrame.id == frame.id ? "border-4" : "border-2"} cursor-pointer h-64 border-red-700 bg-gray-200 rounded-lg overflow-hidden relative`}
       onClick={() => setSelectedFrame(frame)}
     >
-      <img src={frame.frame_url} />
+      <img
+        src={frame.frame_url}
+        className="h-full w-full object-cover object-top"
+      />
       <img
         src={frame.frame_url}
         className="absolute right-0 bottom-0 h-[calc(100%-2rem)] bg-white p-1 m-2"
