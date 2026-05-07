@@ -42,7 +42,7 @@ export default function Upload() {
         </button>
       </div>
       <aside className="lg:w-1/3 w-full absolute lg:relative p-8 h-full flex lg:justify-center">
-        <img src={memory.at(-1)} className="-rotate-3" />
+        <img src={memory.at(-1)} className="-rotate-3 w-full h-full object-scale-down" />
       </aside>
       <aside className="grow flex flex-col justify-center items-center gap-4 z-10">
         <QR value={url} />

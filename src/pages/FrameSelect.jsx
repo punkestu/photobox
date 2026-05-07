@@ -2,10 +2,12 @@ import { Suspense, useContext, useEffect, useRef, useState } from "react";
 import { memoryProvider } from "../hooks/useMemoryProvider";
 import { GetFrames } from "../utils/frameData";
 import { useNavigate } from "react-router";
+import { renderImagesWithFrame } from "../utils/frameRender";
 
 export default function FrameSelect() {
   const [images, setImages] = useContext(memoryProvider);
   const canvasRef = useRef(null);
+  const renderCanvasRef = useRef(null);
   const [frameLoading, setFrameLoading] = useState(false);
   const [selectedFrame, setSelectedFrame] = useState(null);
   // const [frame, setFrame] = useState(null);
@@ -39,6 +41,13 @@ export default function FrameSelect() {
           frame,
           selectedFrame.positions,
         );
+        renderImagesWithFrame(
+          renderCanvasRef.current,
+          loaded,
+          frame,
+          selectedFrame.positions,
+          false
+        );
       }
 
       endLoading();
@@ -61,8 +70,8 @@ export default function FrameSelect() {
   }, [selectedFrame]);
 
   const finish = () => {
-    if (!canvasRef.current) return;
-    const img = canvasRef.current.toDataURL("image/png");
+    if (!renderCanvasRef.current) return;
+    const img = renderCanvasRef.current.toDataURL("image/png");
     setImages((prev) => [...prev, img]);
     navigate("/upload");
   };
@@ -90,6 +99,7 @@ export default function FrameSelect() {
           className={`${selectedFrame && !frameLoading ? "absolute top-0 left-0" : "hidden"} p-4 w-full z-10`}
         >
           <canvas ref={canvasRef} className="w-full"></canvas>
+          <canvas ref={renderCanvasRef} style={{ display: "none" }} />
         </div>
       </aside>
       <div className="absolute bottom-0 left-0 w-full flex justify-end p-4 z-20">
@@ -137,59 +147,4 @@ function Frames({ selectedFrame, setSelectedFrame }) {
       />
     </button>
   ));
-}
-
-function renderImagesWithFrame(canvas, images, frame, positions) {
-  const ctx = canvas.getContext("2d");
-
-  const frameRatio = frame.height / frame.width;
-  const frameW = 720;
-  const frameH = frameW * frameRatio;
-
-  const scale = canvas.width / frameW;
-  canvas.height = frameH * scale;
-
-  ctx.imageSmoothingEnabled = true;
-  ctx.imageSmoothingQuality = "high";
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  images.forEach((img, i) => {
-    if (!positions[i]) return;
-    const x = positions[i].x ?? 0;
-    const y = positions[i].y ?? i * 150;
-    const w = positions[i].w ?? 150;
-    const h = positions[i].h ?? 150;
-    drawImageCover(ctx, img, x * scale, y * scale, w * scale, h * scale);
-  });
-  drawImageCover(
-    ctx,
-    frame,
-    0 * scale,
-    0 * scale,
-    frameW * scale,
-    frameH * scale,
-  );
-}
-
-function drawImageCover(ctx, img, x, y, width, height) {
-  const imgRatio = img.width / img.height;
-  const canvasRatio = width / height;
-
-  let sx, sy, sWidth, sHeight;
-
-  if (imgRatio > canvasRatio) {
-    // gambar lebih lebar → crop kiri kanan
-    sHeight = img.height;
-    sWidth = img.height * canvasRatio;
-    sx = (img.width - sWidth) / 2;
-    sy = 0;
-  } else {
-    // gambar lebih tinggi → crop atas bawah
-    sWidth = img.width;
-    sHeight = img.width / canvasRatio;
-    sx = 0;
-    sy = (img.height - sHeight) / 2;
-  }
-
-  ctx.drawImage(img, sx, sy, sWidth, sHeight, x, y, width, height);
 }

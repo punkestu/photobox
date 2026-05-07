@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { renderImagesWithFrame } from "../utils/frameRender";
 
 export default function TestFrame() {
   const canvasRef = useRef(null);
@@ -184,52 +185,6 @@ export default function TestFrame() {
       </aside>
     </main>
   );
-}
-
-function renderImagesWithFrame(canvas, images, frame, positions) {
-  const ctx = canvas.getContext("2d");
-
-  const frameRatio = frame.height / frame.width;
-  const frameW = 720;
-  const frameH = frameW * frameRatio;
-  
-  const scale = canvas.width / frameW;
-  canvas.height = frameH * scale;
-
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  images.forEach((img, i) => {
-    if (!positions[i]) return;
-    const x = positions[i].x ?? 0;
-    const y = positions[i].y ?? i * 720;
-    const w = positions[i].w ?? 720;
-    const h = positions[i].h ?? 720;
-    drawImageCover(ctx, img, x * scale, y * scale, w * scale, h * scale);
-  });
-  drawImageCover(ctx, frame, 0 * scale, 0 * scale, frameW * scale, frameH * scale);
-}
-
-function drawImageCover(ctx, img, x, y, width, height) {
-  const imgRatio = img.width / img.height;
-  const canvasRatio = width / height;
-
-  let sx, sy, sWidth, sHeight;
-
-  if (imgRatio > canvasRatio) {
-    // gambar lebih lebar → crop kiri kanan
-    sHeight = img.height;
-    sWidth = img.height * canvasRatio;
-    sx = (img.width - sWidth) / 2;
-    sy = 0;
-  } else {
-    // gambar lebih tinggi → crop atas bawah
-    sWidth = img.width;
-    sHeight = img.width / canvasRatio;
-    sx = 0;
-    sy = (img.height - sHeight) / 2;
-  }
-
-  ctx.drawImage(img, sx, sy, sWidth, sHeight, x, y, width, height);
 }
 
 function downloadJSON(data, filename = "data.json") {
