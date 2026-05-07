@@ -1,51 +1,38 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function TestFrame() {
   const canvasRef = useRef(null);
   const [imgCount, setImageCount] = useState(4);
   const [frameUrl, setFrameUrl] = useState("/example_frame.png");
-  const [frame, setFrame] = useState(null);
   const [positions, setPositions] = useState(
     Array.from({ length: imgCount }, (_, i) => ({
       x: 0,
-      y: i * 150,
-      w: 150,
-      h: 150,
+      y: i * 720,
+      w: 720,
+      h: 720,
     })),
   );
 
   useEffect(() => {
-    const timeoutID = setTimeout(async function () {
-      setFrame(
-        await new Promise((resolve) => {
-          const img = new Image();
-          img.src = frameUrl;
-          img.onload = () => resolve(img);
-        }),
-      );
-    }, 1000);
-    return () => clearTimeout(timeoutID);
-  }, [frameUrl]);
-
-  useCallback(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setPositions((prev) => {
       if (prev.length > imgCount) {
         return prev.slice(0, imgCount);
       }
       return [
         ...prev,
-        new Array(imgCount - prev.length).fill(null).map(() => ({
+        ...new Array(imgCount - prev.length).fill(null).map(() => ({
           x: 0,
           y: 0,
-          w: 150,
-          h: 150,
+          w: 720,
+          h: 720,
         })),
       ];
     });
   }, [imgCount]);
 
   useEffect(() => {
-    if (imgCount < 1 || imgCount > 4 || !frame) return;
+    if (imgCount < 1 || imgCount > 4 || !frameUrl) return;
 
     const loadImages = async () => {
       const loaded = await Promise.all(
@@ -57,12 +44,17 @@ export default function TestFrame() {
           });
         }),
       );
+      const frame = await new Promise((resolve) => {
+          const img = new Image();
+          img.src = frameUrl;
+          img.onload = () => resolve(img);
+        });
       if (canvasRef.current) {
         renderImagesWithFrame(canvasRef.current, loaded, frame, positions);
       }
     };
     loadImages();
-  }, [canvasRef, imgCount, positions, frame]);
+  }, [canvasRef, imgCount, positions, frameUrl]);
   return (
     <main className="h-screen w-screen bg-red-900 bg-halftone flex">
       <aside className="grow p-2 flex flex-col gap-4 m-2 border-2 border-red-700 rounded-xl">
@@ -93,7 +85,7 @@ export default function TestFrame() {
             type="number"
             value={imgCount}
             onChange={(e) => {
-              if (e.target.value > 0) {
+              if (e.target.value > 0 && e.target.value <= 4) {
                 setImageCount(e.target.value);
               }
             }}
@@ -196,21 +188,25 @@ export default function TestFrame() {
 
 function renderImagesWithFrame(canvas, images, frame, positions) {
   const ctx = canvas.getContext("2d");
+
+  const frameRatio = frame.height / frame.width;
+  const frameW = 720;
+  const frameH = frameW * frameRatio;
   
-  const scale = canvas.width / frame.width;
-  canvas.height = frame.height * scale;
+  const scale = canvas.width / frameW;
+  canvas.height = frameH * scale;
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   images.forEach((img, i) => {
     if (!positions[i]) return;
     const x = positions[i].x ?? 0;
-    const y = positions[i].y ?? i * 150;
-    const w = positions[i].w ?? 150;
-    const h = positions[i].h ?? 150;
+    const y = positions[i].y ?? i * 720;
+    const w = positions[i].w ?? 720;
+    const h = positions[i].h ?? 720;
     drawImageCover(ctx, img, x * scale, y * scale, w * scale, h * scale);
   });
-  drawImageCover(ctx, frame, 0 * scale, 0 * scale, frame.width * scale, frame.height * scale);
+  drawImageCover(ctx, frame, 0 * scale, 0 * scale, frameW * scale, frameH * scale);
 }
 
 function drawImageCover(ctx, img, x, y, width, height) {

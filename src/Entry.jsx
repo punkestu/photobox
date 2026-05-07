@@ -13,9 +13,9 @@ import App from "./pages/App";
 import Login from "./pages/Login";
 import { useContext, useEffect } from "react";
 import Welcome from "./pages/Welcome";
-import Finish from "./pages/Finish";
 import TestFrame from "./pages/TestFrame";
 import Upload from "./pages/Upload";
+import FrameSelect from "./pages/FrameSelect";
 
 export function Entry() {
   const [credential, setCredential] = useContext(credentialProvider);
@@ -48,7 +48,7 @@ export function Entry() {
     <Routes>
       <Route path="/" element={<Welcome />} />
       <Route path="/app" element={<App />} />
-      <Route path="/finish" element={<Finish />} />
+      <Route path="/frame-select" element={<FrameSelect />} />
       <Route path="/upload" element={<Upload />} />
       <Route path="/login" element={<Login />} />
       <Route path="/test-frame" element={<TestFrame />} />

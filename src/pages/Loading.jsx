@@ -19,7 +19,7 @@ export default function Loading() {
           className="animate-[wiggle_1s_steps(2,end)_infinite]"
         />
         <div className="text-white font-sef text-4xl">
-          Mohon tunggu sebentar yaaa.{new Array(tick).fill(null).map(() => ".")}
+          Tunggu bentar yaaa.{new Array(tick).fill(null).map(() => ".")}
         </div>
       </div>
       <img

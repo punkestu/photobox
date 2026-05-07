@@ -12,7 +12,7 @@ export function useCamera() {
   const navigate = useNavigate();
 
   const process = async () => {
-    navigate("/finish");
+    navigate("/frame-select");
   };
   const addImage = (img) => setImages((prev) => [...prev, img]);
   const deleteImage = (index) =>

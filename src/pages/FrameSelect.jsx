@@ -3,40 +3,19 @@ import { memoryProvider } from "../hooks/useMemoryProvider";
 import { GetFrames } from "../utils/frameData";
 import { useNavigate } from "react-router";
 
-export default function Finish() {
+export default function FrameSelect() {
   const [images, setImages] = useContext(memoryProvider);
   const canvasRef = useRef(null);
-  // const [frames, setFrames] = useState([]);
+  const [frameLoading, setFrameLoading] = useState(false);
   const [selectedFrame, setSelectedFrame] = useState(null);
-  const [frame, setFrame] = useState(null);
+  // const [frame, setFrame] = useState(null);
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   GetFrames().then((frames) => {
-  //     setFrames(frames.data);
-  //     console.log(frames.data);
-  //   });
-  // }, []);
-
   useEffect(() => {
-    if (!selectedFrame) return;
-    const timeoutID = setTimeout(async function () {
-      setFrame(
-        await new Promise((resolve) => {
-          const img = new Image();
-          img.crossOrigin = "anonymous";
-          img.src = selectedFrame.frame_url;
-          img.onload = () => resolve(img);
-        }),
-      );
-    }, 1000);
-    return () => clearTimeout(timeoutID);
-  }, [selectedFrame]);
+    if (!images?.length || !selectedFrame) return;
 
-  useEffect(() => {
-    if (!images?.length || !frame) return;
-
-    const loadImages = async () => {
+    const loadImages = async (startLoading, endLoading) => {
+      startLoading();
       const loaded = await Promise.all(
         images.map((image) => {
           return new Promise((resolve) => {
@@ -47,6 +26,12 @@ export default function Finish() {
           });
         }),
       );
+      const frame = await new Promise((resolve) => {
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.src = selectedFrame.frame_url;
+        img.onload = () => resolve(img);
+      });
       if (canvasRef.current) {
         renderImagesWithFrame(
           canvasRef.current,
@@ -55,10 +40,25 @@ export default function Finish() {
           selectedFrame.positions,
         );
       }
+
+      endLoading();
     };
-    loadImages();
+    loadImages(
+      () => {
+        setTimeout(() => {
+          setFrameLoading(true);
+        }, 50);
+      },
+      () => {
+        setTimeout(() => {
+          setFrameLoading(false);
+        }, 50);
+      },
+    );
+
+    return () => setFrameLoading(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [canvasRef, selectedFrame, frame]);
+  }, [selectedFrame]);
 
   const finish = () => {
     if (!canvasRef.current) return;
@@ -70,23 +70,26 @@ export default function Finish() {
 
   return (
     <main className="h-screen w-screen bg-red-900 bg-halftone flex">
-      <aside className="grow p-2 flex gap-4 m-2 border-2 border-red-700 rounded-xl overflow-auto">
+      <aside className="w-2/3 p-2 flex gap-4 m-2 border-2 border-red-700 rounded-xl overflow-auto">
         <Frames
           selectedFrame={selectedFrame}
           setSelectedFrame={setSelectedFrame}
         />
       </aside>
-      <aside className="w-140 m-2 p-4 border-2 border-red-700 rounded-xl overflow-auto relative">
-        {!selectedFrame ? (
+      <aside className="grow m-2 p-4 border-2 border-red-700 rounded-xl overflow-auto relative">
+        {!selectedFrame && (
           <p className="bg-white p-4 rounded-lg text-center h-full flex justify-center items-center font-sef text-3xl text-red-900">
             Pilih frame terlebih dahulu!
           </p>
-        ) : (
-          <div className="p-4 w-full h-full font-sef text-3xl text-red-900 absolute top-0 left-0">
-            <p className="bg-white rounded-lg text-center w-full h-full flex justify-center items-center">Memproses...</p>
-          </div>
         )}
-        <div className={`${selectedFrame ? "absolute top-0 left-0" : "hidden"} p-4 w-full z-10`}>
+        {frameLoading && (
+          <p className="bg-white p-4 rounded-lg text-center h-full flex justify-center items-center font-sef text-3xl text-red-900">
+            Memproses...
+          </p>
+        )}
+        <div
+          className={`${selectedFrame && !frameLoading ? "absolute top-0 left-0" : "hidden"} p-4 w-full z-10`}
+        >
           <canvas ref={canvasRef} className="w-full"></canvas>
         </div>
       </aside>
@@ -140,8 +143,12 @@ function Frames({ selectedFrame, setSelectedFrame }) {
 function renderImagesWithFrame(canvas, images, frame, positions) {
   const ctx = canvas.getContext("2d");
 
-  const scale = canvas.width / frame.width;
-  canvas.height = frame.height * scale;
+  const frameRatio = frame.height / frame.width;
+  const frameW = 720;
+  const frameH = frameW * frameRatio;
+
+  const scale = canvas.width / frameW;
+  canvas.height = frameH * scale;
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -158,8 +165,8 @@ function renderImagesWithFrame(canvas, images, frame, positions) {
     frame,
     0 * scale,
     0 * scale,
-    frame.width * scale,
-    frame.height * scale,
+    frameW * scale,
+    frameH * scale,
   );
 }
 
