@@ -10,13 +10,11 @@ export function GoogleLoginButton({ className = null }) {
 
   const login = useGoogleLogin({
     scope:
-      "https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.appdata https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/drive.file",
     prompt: "consent",
     onSuccess: (tokenResponse) => {
       const containScopes = [
-        "https://www.googleapis.com/auth/drive.file",
-        "https://www.googleapis.com/auth/drive.appdata",
-        "https://www.googleapis.com/auth/drive",
+        "https://www.googleapis.com/auth/drive.file"
       ].reduce((acc, scope) => {
         return acc && tokenResponse.scope.includes(scope);
       }, true);
