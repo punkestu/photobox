@@ -2,7 +2,7 @@ import { QRCodeCanvas } from "qrcode.react";
 import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { memoryProvider } from "../hooks/useMemoryProvider";
-import LogoTypo from "../assets/Logo_border_typo.png";
+import LogoTypo from "../assets/Logo_border_typo.webp";
 import { postImage } from "../utils/googleDrive";
 import Loading from "./Loading";
 import { credentialProvider } from "../hooks/useGoogleProvider";

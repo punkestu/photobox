@@ -2,7 +2,7 @@ import { useContext, useEffect } from "react";
 import { GoogleLoginButton } from "../components/GoogleLogin";
 import { credentialProvider } from "../hooks/useGoogleProvider";
 import { useNavigate } from "react-router";
-import Logo from "../assets/Logo_border_typo.png";
+import Logo from "../assets/Logo_border_typo.webp";
 
 export default function Login() {
   const [credential, setCredential] = useContext(credentialProvider);

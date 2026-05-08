@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import Logo from "../assets/Logo_border.png";
-import LogoTypo from "../assets/Logo_border_typo.png";
+import Logo from "../assets/Logo_border.webp";
+import LogoTypo from "../assets/Logo_border_typo.webp";
 
 export default function Loading() {
   const [tick, setTick] = useState(3);
