@@ -11,7 +11,7 @@ import { renderImagesWithFrame } from "../utils/frameRender";
 
 export default function Upload() {
   const [url, setUrl] = useState("");
-  const [isUploading, setIsUploading] = useState(false);
+  const isUploadingRef = useRef(false);
   const [images] = useContext(memoryProvider);
   const location = useLocation();
   const [credential, setCredential] = useContext(credentialProvider);
@@ -23,9 +23,8 @@ export default function Upload() {
   };
 
   useEffect(() => {
-    if (location.pathname == "/upload" && images.length > 0 && !isUploading) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setIsUploading(true);
+    if (location.pathname == "/upload" && images.length > 0 && !isUploadingRef.current) {
+      isUploadingRef.current = true;
       console.log("upload");
       const expiresAt = localStorage.getItem("credential_expires_at");
 
@@ -77,7 +76,7 @@ export default function Upload() {
           })
           .catch((e) => alert(e.message))
           .finally(() => {
-            setIsUploading(false);
+            isUploadingRef.current = false;
           });
       })();
     }
