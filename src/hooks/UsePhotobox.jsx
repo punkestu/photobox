@@ -3,16 +3,16 @@ import { Camera } from "../components/Camera";
 import { Gallery } from "../components/Gallery";
 import { useNavigate } from "react-router";
 import { memoryProvider } from "./useMemoryProvider";
-
-const max_gallery = 4;
+import { frameProvider } from "./useFrame";
 
 export function useCamera() {
   const [images, setImages] = useContext(memoryProvider);
-  const galleryIsFull = useMemo(() => images.length >= max_gallery, [images]);
+  const [selectedFrame, _] = useContext(frameProvider);
+  const galleryIsFull = useMemo(() => images.length >= selectedFrame.image_count, [images, selectedFrame]);
   const navigate = useNavigate();
 
   const process = async () => {
-    navigate("/frame-select");
+    navigate("/upload");
   };
   const addImage = (img) => setImages((prev) => [...prev, img]);
   const deleteImage = (index) =>

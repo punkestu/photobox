@@ -1,29 +1,26 @@
 import { Suspense, useContext, useEffect, useRef, useState } from "react";
-import { memoryProvider } from "../hooks/useMemoryProvider";
 import { GetFrames } from "../utils/frameData";
 import { useNavigate } from "react-router";
 import { renderImagesWithFrame } from "../utils/frameRender";
+import { frameProvider } from "../hooks/useFrame";
 
 export default function FrameSelect() {
-  const [images, setImages] = useContext(memoryProvider);
   const canvasRef = useRef(null);
-  const renderCanvasRef = useRef(null);
   const [frameLoading, setFrameLoading] = useState(false);
-  const [selectedFrame, setSelectedFrame] = useState(null);
-  // const [frame, setFrame] = useState(null);
+  const [selectedFrame, setSelectedFrame] = useContext(frameProvider);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!images?.length || !selectedFrame) return;
+    if (!selectedFrame) return;
 
     const loadImages = async (startLoading, endLoading) => {
       startLoading();
       const loaded = await Promise.all(
-        images.map((image) => {
+        new Array(selectedFrame.image_count).fill(null).map((_, i) => {
           return new Promise((resolve) => {
             const img = new Image();
             img.crossOrigin = "anonymous";
-            img.src = image; // data URL langsung dipakai
+            img.src = "/placeholder" + (i + 1) + ".png";
             img.onload = () => resolve(img);
           });
         }),
@@ -40,13 +37,6 @@ export default function FrameSelect() {
           loaded,
           frame,
           selectedFrame.positions,
-        );
-        renderImagesWithFrame(
-          renderCanvasRef.current,
-          loaded,
-          frame,
-          selectedFrame.positions,
-          false,
         );
       }
 
@@ -66,20 +56,16 @@ export default function FrameSelect() {
     );
 
     return () => setFrameLoading(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedFrame]);
 
   const finish = () => {
-    if (!renderCanvasRef.current) return;
-    const img = renderCanvasRef.current.toDataURL("image/png");
-    setImages((prev) => [...prev, img]);
-    navigate("/upload");
+    navigate("/app");
   };
 
   return (
     <main className="h-screen w-screen bg-red-900 bg-halftone flex">
       <aside className="w-1/2 md:w-2/3 p-2 m-2 border-2 border-red-700 rounded-xl overflow-auto">
-        <div className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 relative">
           <Frames
             selectedFrame={selectedFrame}
             setSelectedFrame={setSelectedFrame}
@@ -101,7 +87,6 @@ export default function FrameSelect() {
           className={`${selectedFrame && !frameLoading ? "absolute top-0 left-0" : "hidden"} p-4 w-full z-10`}
         >
           <canvas ref={canvasRef} className="w-full"></canvas>
-          <canvas ref={renderCanvasRef} style={{ display: "none" }} />
         </div>
       </aside>
       <div className="absolute bottom-0 left-0 w-full flex justify-end p-4 z-20">
@@ -109,7 +94,7 @@ export default function FrameSelect() {
           className="px-4 py-2 bg-white font-sef text-2xl text-red-900 border-2 border-red-900 rounded-xl"
           onClick={finish}
         >
-          Selesaikan
+          Lanjut...
         </button>
       </div>
     </main>
@@ -131,7 +116,7 @@ function Frames({ selectedFrame, setSelectedFrame }) {
 
   if (isLoading) {
     return (
-      <p className="h-full w-full flex justify-center items-center bg-white text-red-900 font-sef text-3xl rounded-lg">
+      <p className="h-full w-full flex justify-center items-center bg-white text-red-900 font-sef text-3xl rounded-lg col-span-1 md:col-span-2 lg:col-span-3 p-4">
         Loading...
       </p>
     );
@@ -148,7 +133,7 @@ function Frames({ selectedFrame, setSelectedFrame }) {
       />
       <img
         src={frame.frame_url}
-        className="absolute right-0 bottom-0 h-[calc(100%-2rem)] bg-white p-1 m-2"
+        className="absolute right-0 bottom-0 max-h-[calc(100%-2rem)] max-w-1/2 object-contain object-bottom bg-white p-1 m-2"
       />
     </button>
   ));

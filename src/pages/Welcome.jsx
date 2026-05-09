@@ -9,7 +9,7 @@ export default function Welcome() {
       <button
         className="flex flex-col items-center gap-6 group"
         onClick={() => {
-          navigate("/app");
+          navigate("/frame-select");
         }}
       >
         <img src={Logo} width={120} className="group-hover:rotate-12" />

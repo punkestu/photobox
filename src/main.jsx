@@ -7,6 +7,7 @@ import { CredentialProvider } from "./hooks/useGoogleProvider.jsx";
 import { BrowserRouter } from "react-router";
 import { TimerProvider } from "./hooks/useTimerProvider.jsx";
 import { MemoryProvider } from "./hooks/useMemoryProvider.jsx";
+import { FrameProvider } from "./hooks/useFrame.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -14,9 +15,11 @@ createRoot(document.getElementById("root")).render(
       <CredentialProvider>
         <TimerProvider>
           <MemoryProvider>
-            <BrowserRouter>
-              <Entry />
-            </BrowserRouter>
+            <FrameProvider>
+              <BrowserRouter>
+                <Entry />
+              </BrowserRouter>
+            </FrameProvider>
           </MemoryProvider>
         </TimerProvider>
       </CredentialProvider>
