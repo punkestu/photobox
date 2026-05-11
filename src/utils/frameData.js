@@ -13,7 +13,7 @@ export async function GetFrames() {
         return {
             id: columns[0],
             frame_url: columns[1],
-            image_count: columns[2],
+            image_count: parseInt(columns[2]),
             positions: JSON.parse(columns[3]),
         }
     });
