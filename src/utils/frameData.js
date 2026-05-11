@@ -1,7 +1,7 @@
 // import { createClient } from '@supabase/supabase-js';
 
 export async function GetFrames() {
-    const result = await fetch("https://raw.githubusercontent.com/punkestu/photobox-frames/refs/heads/main/Photobox-Frames-Config%20-%20Frames%20(1).csv", {
+    const result = await fetch("https://raw.githubusercontent.com/punkestu/photobox-frames/refs/heads/main/frames-config", {
         cache: "no-cache"
     });
     const data = await result.text();
