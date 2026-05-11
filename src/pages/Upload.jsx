@@ -19,11 +19,22 @@ export default function Upload() {
   const [framedImage, setFramedImage] = useState("");
   const navigate = useNavigate();
   const print = () => {
-    window.print();
+    const win = window.open("", "_blank");
+    win.document.write(`<html>
+      <head><title>Print</title></head>
+      <body style="margin:0">
+        <img src="${framedImage}" style="width:100%" onload="window.print(); window.close();" />
+      </body>
+    </html>`);
+    win.document.close();
   };
 
   useEffect(() => {
-    if (location.pathname == "/upload" && images.length > 0 && !isUploadingRef.current) {
+    if (
+      location.pathname == "/upload" &&
+      images.length > 0 &&
+      !isUploadingRef.current
+    ) {
       isUploadingRef.current = true;
       console.log("upload");
       const expiresAt = localStorage.getItem("credential_expires_at");
