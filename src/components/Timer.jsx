@@ -18,7 +18,7 @@ export default function Timer() {
     };
   }, [timer, setTimer]);
   return (
-    <div className="absolute right-0 m-8 px-2 py-1 rounded-xl bg-gray-500/50">
+    <div className="absolute z-10 right-0 m-8 px-2 py-1 rounded-xl bg-gray-500/50">
       <p>
         {minute()}:{second()}
       </p>

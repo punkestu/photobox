@@ -3,9 +3,16 @@ import Shutter from "../assets/shutter.mp3";
 
 const timerCount = 3;
 
-export function Camera({ className, saveImage, process, galleryIsFull }) {
+export function Camera({
+  className,
+  saveImage,
+  process,
+  galleryIsFull,
+  currentFrame,
+}) {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
+  const directionRef = useRef(null);
   const [timer, setTimer] = useState(0);
   const [flash, setFlash] = useState(false);
   const [flashDim, setFlashDim] = useState(false);
@@ -55,6 +62,29 @@ export function Camera({ className, saveImage, process, galleryIsFull }) {
     }, 3000);
   };
 
+  // (video) => {
+  //     if (!directionRef.current || !video) return;
+  //     if (!currentFrame)
+  //       directionRef.current.style = {
+  //         display: "none",
+  //       };
+  //     console.log("useEffect Direction");
+
+  //     const realWScale = currentFrame.w / 1040;
+  //     const realHScale = currentFrame.h / 1040;
+
+  //     const videoW = video.videoWidth;
+  //     const videoH = video.videoHeight;
+  //     const wMorethanH = videoW > videoH;
+
+  //     console.log(videoW, videoH, currentFrame.w, currentFrame.h)
+
+  //     directionRef.current.style = {
+  //       width: `${(wMorethanH ? realWScale : 1) * 100}%`,
+  //       height: `${(wMorethanH ? 1 : realHScale) * 100}%`,
+  //     };
+  //   };
+
   useEffect(() => {
     try {
       navigator.mediaDevices
@@ -76,12 +106,29 @@ export function Camera({ className, saveImage, process, galleryIsFull }) {
         .then((stream) => {
           if (videoRef.current) {
             videoRef.current.srcObject = stream;
+
+            setTimeout(() => {
+              if (!directionRef.current) return;
+              if (!currentFrame) directionRef.current.style.display = "none";
+              const realWScale = currentFrame.w / 1040;
+              const realHScale = currentFrame.h / 1040;
+
+              const videoW = videoRef.current.videoWidth;
+              const videoH = videoRef.current.videoHeight;
+              const wMorethanH = videoW > videoH;
+
+              console.log(videoW, videoH, currentFrame.w, currentFrame.h);
+
+              directionRef.current.style.display = "block";
+              directionRef.current.style.width = `${(wMorethanH ? realWScale : 1) * (videoW - 16)}px`;
+              directionRef.current.style.height = `${(wMorethanH ? 1 : realHScale) * (videoH - 16)}px`;
+            }, 50);
           }
         });
     } catch (err) {
       console.error(err);
     }
-  }, [videoRef]);
+  }, [videoRef, directionRef, currentFrame]);
 
   useEffect(() => {
     if (timer > 0) {
@@ -130,7 +177,7 @@ export function Camera({ className, saveImage, process, galleryIsFull }) {
         >
           <button
             className={
-              "w-full h-full text-black font-semibold rounded-lg flex flex-col text-2xl justify-center items-center"
+              "w-full h-full text-black font-semibold rounded-lg flex flex-col text-2xl justify-center items-center z-10"
             }
             onClick={() => (!galleryIsFull ? capture() : process())}
           >
@@ -169,6 +216,17 @@ export function Camera({ className, saveImage, process, galleryIsFull }) {
               ""
             )}
           </button>
+
+          <p className="text-red-600 font-black p-2 absolute top-0">
+            {/* {`${currentFrame.w / 1040 * 100} , ${currentFrame.h / 1040 * 100} , ${currentFrame.h / currentFrame.w}`} */}
+          </p>
+          <div
+            ref={directionRef}
+            className="border-8 border-yellow-300/50 rounded-lg absolute top-1/2 left-1/2 -translate-1/2 -z-10"
+            style={{
+              display: "none",
+            }}
+          ></div>
         </div>
       </aside>
       <canvas ref={canvasRef} style={{ display: "none" }} />

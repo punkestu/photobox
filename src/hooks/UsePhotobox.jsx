@@ -8,7 +8,10 @@ import { frameProvider } from "./useFrame";
 export function useCamera() {
   const [images, setImages] = useContext(memoryProvider);
   const [selectedFrame, _] = useContext(frameProvider);
-  const galleryIsFull = useMemo(() => images.length >= selectedFrame.image_count, [images, selectedFrame]);
+  const galleryIsFull = useMemo(
+    () => selectedFrame && images.length >= selectedFrame.image_count,
+    [images, selectedFrame],
+  );
   const navigate = useNavigate();
 
   const process = async () => {
