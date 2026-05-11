@@ -28,6 +28,9 @@ export default function Upload() {
     </html>`);
     win.document.close();
   };
+  const printStruk = () => {
+    alert("Coming soon!");
+  };
 
   useEffect(() => {
     if (
@@ -124,12 +127,20 @@ export default function Upload() {
         <p className="font-semibold font-sef text-2xl text-white">
           Scan QR untuk mendapatkan foto
         </p>
-        <button
-          className="bg-white font-sef text-3xl text-red-900 hover:-rotate-6 px-4 py-2 rounded-xl"
-          onClick={print}
-        >
-          Cetak
-        </button>
+        <div className="flex gap-2">
+          <button
+            className="bg-white font-sef text-3xl text-red-900 hover:-rotate-6 px-4 py-2 rounded-xl"
+            onClick={print}
+          >
+            Cetak
+          </button>
+          <button
+            className="bg-white font-sef text-3xl text-red-900 hover:-rotate-6 px-4 py-2 rounded-xl"
+            onClick={printStruk}
+          >
+            Cetak Struk
+          </button>
+        </div>
       </aside>
       <img
         src={LogoTypo}
