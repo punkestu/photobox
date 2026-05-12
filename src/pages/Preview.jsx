@@ -3,7 +3,7 @@ import { frameProvider } from "../hooks/useFrame";
 import { memoryProvider } from "../hooks/useMemoryProvider";
 import { renderImagesWithFrame } from "../utils/frameRender";
 import { renderGIF } from "../utils/gifRender";
-import LogoTypo from "../assets/Logo_border_typo.webp";
+import LogoTypo from "../assets/Logo_border_typo_180px.webp";
 import { useNavigate } from "react-router";
 
 export default function Preview() {
@@ -42,7 +42,7 @@ export default function Preview() {
         );
       }
       const gifUrl = await renderGIF(loaded);
-      setGif( URL.createObjectURL(gifUrl));
+      setGif(URL.createObjectURL(gifUrl));
     };
     loadImages();
   }, [selectedFrame, images]);
@@ -58,12 +58,24 @@ export default function Preview() {
       </aside>
       <img
         src={LogoTypo}
+        alt="Logo Typography"
         width={180}
+        fetchPriority="high"
         className="absolute bottom-0 right-0 m-6"
       />
       <div className="absolute top-0 right-0 w-full flex justify-between p-2">
-        <button className="px-4 py-2 bg-white font-sef text-2xl text-red-900 border-2 border-red-900 rounded-xl" onClick={()=>navigate("/app")}>Foto ulang</button>
-        <button className="px-4 py-2 bg-white font-sef text-2xl text-red-900 border-2 border-red-900 rounded-xl" onClick={()=>navigate("/upload")}>Selesaikan</button>
+        <button
+          className="px-4 py-2 bg-white font-sef text-2xl text-red-900 border-2 border-red-900 rounded-xl"
+          onClick={() => navigate("/app")}
+        >
+          Foto ulang
+        </button>
+        <button
+          className="px-4 py-2 bg-white font-sef text-2xl text-red-900 border-2 border-red-900 rounded-xl"
+          onClick={() => navigate("/upload")}
+        >
+          Selesaikan
+        </button>
       </div>
     </main>
   );

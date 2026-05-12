@@ -11,12 +11,14 @@ import {
 } from "./hooks/useGoogleProvider";
 import App from "./pages/App";
 import Login from "./pages/Login";
-import { useContext, useEffect } from "react";
-import Welcome from "./pages/Welcome";
-import TestFrame from "./pages/TestFrame";
-import Upload from "./pages/Upload";
-import FrameSelect from "./pages/FrameSelect";
-import Preview from "./pages/Preview";
+import { lazy, Suspense, useContext, useEffect } from "react";
+
+const Welcome = lazy(() => import("./pages/Welcome"));
+const TestFrame = lazy(() => import("./pages/TestFrame"));
+const Upload = lazy(() => import("./pages/Upload"));
+const FrameSelect = lazy(() => import("./pages/FrameSelect"));
+const Preview = lazy(() => import("./pages/Preview"));
+const Loading = lazy(() => import("./pages/Loading"));
 
 export function Entry() {
   const [credential, setCredential] = useContext(credentialProvider);
@@ -43,17 +45,19 @@ export function Entry() {
     }
 
     // Valid → DO NOTHING (let user navigate freely)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [credential, setCredential, navigate]);
   return (
-    <Routes>
-      <Route path="/" element={<Welcome />} />
-      <Route path="/app" element={<App />} />
-      <Route path="/frame-select" element={<FrameSelect />} />
-      <Route path="/preview" element={<Preview />} />
-      <Route path="/upload" element={<Upload />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/test-frame" element={<TestFrame />} />
-    </Routes>
+    <Suspense fallback={<Loading />}>
+      <Routes>
+        <Route path="/" element={<Welcome />} />
+        <Route path="/app" element={<App />} />
+        <Route path="/frame-select" element={<FrameSelect />} />
+        <Route path="/preview" element={<Preview />} />
+        <Route path="/upload" element={<Upload />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/test-frame" element={<TestFrame />} />
+      </Routes>
+    </Suspense>
   );
 }

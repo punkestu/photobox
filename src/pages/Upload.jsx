@@ -2,7 +2,7 @@ import { QRCodeCanvas } from "qrcode.react";
 import { useContext, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { memoryProvider } from "../hooks/useMemoryProvider";
-import LogoTypo from "../assets/Logo_border_typo.webp";
+import LogoTypo from "../assets/Logo_border_typo_180px.webp";
 import { postImage } from "../utils/googleDrive";
 import Loading from "./Loading";
 import { credentialProvider } from "../hooks/useGoogleProvider";
@@ -157,6 +157,8 @@ export default function Upload() {
       <img
         src={LogoTypo}
         width={180}
+        alt="Logo Typography"
+        fetchPriority="high"
         className="absolute bottom-0 right-0 m-6"
       />
     </main>
