@@ -4,7 +4,8 @@ export const postImage = async (images, credential) => {
     try {
       const result = await postImageFn(images, credential);
       return result;
-    } catch {
+    } catch (e) {
+      console.error(e);
       retry++;
     }
   }
@@ -47,7 +48,9 @@ const postImageFn = async (images, credential) => {
   await Promise.all(
     images.map((image, index) => {
       return createImage(
-        urlToFile(image, `image_${index}.png`),
+        image.type == "url" ? urlToFile(image.data, image.name ?? `image_${index}.png`) : (
+          image.type == "blob" ? blobToFile(image.data, image.name ?? `gif_${index}.gif`, image.mimetype) : image
+        ),
         credential,
         folderCustomer[0].id,
       );
@@ -167,4 +170,8 @@ function urlToFile(dataUrl, fileName) {
   return new File([new Blob([buffer], { type: mime })], fileName, {
     type: mime,
   });
+}
+
+function blobToFile(blob, fileName, mimetype = "image/png") {
+  return new File([blob], fileName, { type: mimetype });
 }

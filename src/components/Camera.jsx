@@ -33,7 +33,9 @@ export function Camera({
       setTimeout(() => {
         const video = videoRef.current;
         const canvas = canvasRef.current;
-        const ctx = canvas.getContext("2d");
+        const ctx = canvas.getContext("2d", {
+          willReadFrequently: true
+        });
 
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
@@ -49,7 +51,9 @@ export function Camera({
         ctx.setTransform(1, 0, 0, 1, 0, 0);
 
         // postprocess
-        var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height, {
+          
+        });
         ctx.putImageData(imageData, 0, 0);
 
         setFlash(false);
@@ -61,29 +65,6 @@ export function Camera({
       }, 1000);
     }, 3000);
   };
-
-  // (video) => {
-  //     if (!directionRef.current || !video) return;
-  //     if (!currentFrame)
-  //       directionRef.current.style = {
-  //         display: "none",
-  //       };
-  //     console.log("useEffect Direction");
-
-  //     const realWScale = currentFrame.w / 1040;
-  //     const realHScale = currentFrame.h / 1040;
-
-  //     const videoW = video.videoWidth;
-  //     const videoH = video.videoHeight;
-  //     const wMorethanH = videoW > videoH;
-
-  //     console.log(videoW, videoH, currentFrame.w, currentFrame.h)
-
-  //     directionRef.current.style = {
-  //       width: `${(wMorethanH ? realWScale : 1) * 100}%`,
-  //       height: `${(wMorethanH ? 1 : realHScale) * 100}%`,
-  //     };
-  //   };
 
   useEffect(() => {
     try {
@@ -106,29 +87,38 @@ export function Camera({
         .then((stream) => {
           if (videoRef.current) {
             videoRef.current.srcObject = stream;
-
-            setTimeout(() => {
-              if (!directionRef.current) return;
-              if (!currentFrame) directionRef.current.style.display = "none";
-              const realWScale = currentFrame.w / 1040;
-              const realHScale = currentFrame.h / 1040;
-
-              const videoW = videoRef.current.videoWidth;
-              const videoH = videoRef.current.videoHeight;
-              const wMorethanH = videoW > videoH;
-
-              console.log(videoW, videoH, currentFrame.w, currentFrame.h);
-
-              directionRef.current.style.display = "block";
-              directionRef.current.style.width = `${(wMorethanH ? realWScale : 1) * (videoW - 16)}px`;
-              directionRef.current.style.height = `${(wMorethanH ? 1 : realHScale) * (videoH - 16)}px`;
-            }, 50);
           }
         });
     } catch (err) {
       console.error(err);
     }
-  }, [videoRef, directionRef, currentFrame]);
+  }, [videoRef]);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const update = () => {
+      if (!directionRef.current || !currentFrame) return;
+
+      const realWScale = currentFrame.w / 1040;
+      const realHScale = currentFrame.h / 1040;
+
+      const videoW = video.videoWidth;
+      const videoH = video.videoHeight;
+      const wMorethanH = videoW > videoH;
+
+      directionRef.current.style.display = "block";
+      directionRef.current.style.width = `${(wMorethanH ? realWScale : 1) * (videoW - 16)}px`;
+      directionRef.current.style.height = `${(wMorethanH ? 1 : realHScale) * (videoH - 16)}px`;
+    };
+
+    video.addEventListener("loadedmetadata", update);
+
+    return () => {
+      video.removeEventListener("loadedmetadata", update);
+    };
+  }, [currentFrame]);
 
   useEffect(() => {
     if (timer > 0) {

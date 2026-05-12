@@ -9,11 +9,14 @@ import { useLocation, useNavigate } from "react-router";
 import { frameProvider } from "../hooks/useFrame";
 
 function App() {
-  const [images, galleryIsFull, process, addImage, deleteImage] = useCamera();
+  const [images, galleryIsFull, addImage, deleteImage] = useCamera();
   const [_1, setTimer] = useContext(timerProvider);
   const [selectedFrame] = useContext(frameProvider);
   const navigate = useNavigate();
   const location = useLocation();
+  const process = async () => {
+    navigate("/preview");
+  };
 
   useEffect(() => {
     requestWakeLock();

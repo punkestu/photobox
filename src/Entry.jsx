@@ -16,6 +16,7 @@ import Welcome from "./pages/Welcome";
 import TestFrame from "./pages/TestFrame";
 import Upload from "./pages/Upload";
 import FrameSelect from "./pages/FrameSelect";
+import Preview from "./pages/Preview";
 
 export function Entry() {
   const [credential, setCredential] = useContext(credentialProvider);
@@ -49,6 +50,7 @@ export function Entry() {
       <Route path="/" element={<Welcome />} />
       <Route path="/app" element={<App />} />
       <Route path="/frame-select" element={<FrameSelect />} />
+      <Route path="/preview" element={<Preview />} />
       <Route path="/upload" element={<Upload />} />
       <Route path="/login" element={<Login />} />
       <Route path="/test-frame" element={<TestFrame />} />

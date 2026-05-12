@@ -8,6 +8,7 @@ import Loading from "./Loading";
 import { credentialProvider } from "../hooks/useGoogleProvider";
 import { frameProvider } from "../hooks/useFrame";
 import { renderImagesWithFrame } from "../utils/frameRender";
+import { renderGIF } from "../utils/gifRender";
 
 export default function Upload() {
   const [url, setUrl] = useState("");
@@ -17,6 +18,7 @@ export default function Upload() {
   const [credential, setCredential] = useContext(credentialProvider);
   const [selectedFrame] = useContext(frameProvider);
   const [framedImage, setFramedImage] = useState("");
+  const [gifImage, setGifImage] = useState("");
   const navigate = useNavigate();
   const print = () => {
     const win = window.open("", "_blank");
@@ -83,8 +85,17 @@ export default function Upload() {
         const framedImage = canvasRef.current.toDataURL();
         console.log("get framed image");
         setFramedImage(framedImage);
+        const gif = await renderGIF(loaded);
+        setGifImage(URL.createObjectURL(gif));
 
-        await postImage([...images, framedImage], credential)
+        await postImage(
+          [
+            ...images.map((image) => ({ data: image, type: "url" })),
+            { data: framedImage, type: "url", name: "framed.png" },
+            { data: gif, type: "blob", mimetype: "image/gif", name: "animated.gif"},
+          ],
+          credential,
+        )
           .then((url) => {
             setUrl(url);
           })
@@ -116,11 +127,12 @@ export default function Upload() {
           Refresh
         </button>
       </div>
-      <aside className="lg:w-1/3 w-full absolute lg:relative p-8 h-full flex lg:justify-center">
+      <aside className="lg:w-1/3 w-full absolute lg:relative p-8 h-full flex lg:justify-center items-center">
         <img
           src={framedImage}
-          className="-rotate-3 w-full h-full object-scale-down"
+          className="-rotate-6 w-full h-fit object-contain bg-white p-2 rounded-lg"
         />
+        <img src={gifImage} className="absolute top-1/2 left-2/3 -translate-1/2 rotate-12 w-2/3 bg-white p-2 rounded-lg"/>
       </aside>
       <aside className="grow flex flex-col justify-center items-center gap-4 z-10">
         <QR value={url} />
