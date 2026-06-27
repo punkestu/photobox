@@ -9,6 +9,7 @@ import { credentialProvider } from "../hooks/useGoogleProvider";
 import { frameProvider } from "../hooks/useFrame";
 import { renderImagesWithFrame } from "../utils/frameRender";
 import { renderGIF } from "../utils/gifRender";
+import { compressDataUrl } from "../utils/imageCompress";
 
 export default function Upload() {
   const [url, setUrl] = useState("");
@@ -90,9 +91,21 @@ export default function Upload() {
 
         await postImage(
           [
-            ...images.map((image) => ({ data: image, type: "url" })),
-            { data: framedImage, type: "url", name: "framed.png" },
-            { data: gif, type: "blob", mimetype: "image/gif", name: "animated.gif"},
+            ...images.map((image) => ({
+              data: compressDataUrl(image, 1),
+              type: "url",
+            })),
+            {
+              data: compressDataUrl(framedImage, 3),
+              type: "url",
+              name: "framed.png",
+            },
+            {
+              data: gif,
+              type: "blob",
+              mimetype: "image/gif",
+              name: "animated.gif",
+            },
           ],
           credential,
         )
@@ -132,7 +145,10 @@ export default function Upload() {
           src={framedImage}
           className="-rotate-6 w-full h-fit object-contain bg-white p-2 rounded-lg"
         />
-        <img src={gifImage} className="absolute top-1/2 left-2/3 -translate-1/2 rotate-12 w-2/3 bg-white p-2 rounded-lg"/>
+        <img
+          src={gifImage}
+          className="absolute top-1/2 left-2/3 -translate-1/2 rotate-12 w-2/3 bg-white p-2 rounded-lg"
+        />
       </aside>
       <aside className="grow flex flex-col justify-center items-center gap-4 z-10">
         <QR value={url} />
