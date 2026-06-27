@@ -63,9 +63,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         selectedProduct = product;
 
         modalImages.innerHTML = [product.image, ...(product.images ?? [])].map(imageUrl => {
-            return `<div class="w-auto lg:w-full h-full lg:h-auto">
+            return `<a href="${imageUrl}" target="_blank" class="w-auto lg:w-full h-full lg:h-auto">
               <img src="${imageUrl}" class="h-full w-full object-cover" />
-            </div>`;
+            </a>`;
         }).join("");
         if (product.calendar_url) {
             modalCalendar.setAttribute("src", product.calendar_url ?? "");
