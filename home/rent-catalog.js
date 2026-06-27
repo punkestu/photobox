@@ -8,7 +8,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const modalContent = document.getElementById('modalContent');
     const closeModalBtn = document.getElementById('closeModalBtn');
 
-    const modalImage = document.getElementById('modalImage');
+    const modalImages = document.getElementById('modalImages');
+    const modalYoutube = document.getElementById('modalYoutube');
+    const modalCalendar = document.getElementById('modalCalendar');
     const modalTitle = document.getElementById('modalTitle');
     const modalDuration = document.getElementById('modalDuration');
     const modalDates = document.getElementById('modalDates');
@@ -60,7 +62,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         selectedProduct = product;
 
-        modalImage.src = product.image;
+        modalImages.innerHTML = [product.image, ...(product.images ?? [])].map(imageUrl => {
+            return `<div class="w-auto lg:w-full h-full lg:h-auto">
+              <img src="${imageUrl}" class="h-full w-full object-cover" />
+            </div>`;
+        }).join("");
+        if (product.calendar_url) {
+            modalCalendar.setAttribute("src", product.calendar_url ?? "");
+            modalCalendar.classList.remove("hidden");
+        } else {
+            modalCalendar.classList.add("hidden");
+        }
+        if (product.youtube_url) {
+            modalYoutube.setAttribute("href", product.youtube_url ?? "");
+            modalYoutube.classList.remove("hidden");
+        } else {
+            modalYoutube.classList.add("hidden");
+        }
         modalTitle.textContent = product.name;
         modalDuration.textContent = rentalDays.toString();
 
@@ -127,10 +145,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <img src="${camera.image}" alt="${camera.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                     <div class="absolute top-3 right-3 bg-red-900 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md">${formatCurrency(camera.pricePerDay)} / hari</div>
                 </div>
-                <div class="p-5 flex flex-col flex-grow bg-white text-gray-900">
+                <div class="p-5 flex flex-col grow bg-white text-gray-900">
                     <h3 class="font-bold text-xl mb-2 text-red-950">${camera.name}</h3>
-                    <p class="text-sm text-gray-600 mb-1 flex-grow">${camera.description}</p>
-                    ${camera.youtube_url ? `<a href="${camera.youtube_url}" class="mb-5 text-sm text-blue-500 underline" target="_blank">Tutorial Penggunaan</a>` : "<div class='mb-5'></div>"}
+                    <p class="text-sm text-gray-600 mb-1 grow">${camera.description}</p>
+                    ${camera.youtubeUrl ? `<a href="${camera.youtubeUrl}" class="mb-5 text-sm text-blue-500 underline" target="_blank">Tutorial Penggunaan</a>` : "<div class='mb-5'></div>"}
                     <button class="w-full bg-red-900 hover:bg-red-800 text-white font-semibold py-3 px-4 rounded-xl transition-colors flex items-center justify-center gap-2 open-modal-btn">Sewa Sekarang</button>
                 </div>
             `;
@@ -141,7 +159,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                     id: camera.id,
                     name: camera.name,
                     price: camera.pricePerDay,
-                    image: camera.image
+                    image: camera.image,
+                    images: camera.images,
+                    youtube_url: camera.youtubeUrl,
+                    calendar_url: camera.calendarUrl
                 });
             });
 
