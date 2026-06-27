@@ -63,16 +63,16 @@ export default function Preview() {
       />
       <div className="absolute top-0 right-0 w-full flex justify-between p-2">
         <button
-          className="px-4 py-2 bg-white font-sef text-2xl text-red-900 border-2 border-red-900 rounded-xl"
+          className="px-4 py-2 bg-white text-xl text-red-900 border-2 border-red-900 rounded-xl"
           onClick={() => navigate("/app")}
         >
-          Foto ulang
+          &laquo; Foto ulang
         </button>
         <button
-          className="px-4 py-2 bg-white font-sef text-2xl text-red-900 border-2 border-red-900 rounded-xl"
+          className="px-4 py-2 bg-white text-xl text-red-900 border-2 border-red-900 rounded-xl"
           onClick={() => navigate("/upload")}
         >
-          Selesaikan
+          Selesaikan &raquo;
         </button>
       </div>
     </main>

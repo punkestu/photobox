@@ -23,9 +23,7 @@ export default function Loading({ message }) {
         <div className="text-white font-sef text-4xl text-center">
           Tunggu bentar yaaa.{new Array(tick).fill(null).map(() => ".")}
         </div>
-        <p className="text-white font-sef text-sm text-center">
-          {message ?? ""}
-        </p>
+        <p className="text-white text-sm text-center">{message ?? ""}</p>
       </div>
       <img
         src={LogoTypo}

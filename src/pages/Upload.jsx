@@ -161,18 +161,18 @@ export default function Upload() {
       </aside>
       <aside className="grow flex flex-col justify-center items-center gap-4 z-10">
         <QR value={url} />
-        <p className="font-semibold font-sef text-2xl text-white">
+        <p className="font-semibold text-xl text-white">
           Scan QR untuk mendapatkan foto
         </p>
         <div className="flex gap-2">
           <button
-            className="bg-white font-sef text-3xl text-red-900 hover:-rotate-6 px-4 py-2 rounded-xl"
+            className="bg-white text-base text-red-900 hover:-rotate-6 px-4 py-2 rounded-xl"
             onClick={print}
           >
             Cetak
           </button>
           <button
-            className="bg-white font-sef text-3xl text-red-900 hover:-rotate-6 px-4 py-2 rounded-xl"
+            className="bg-white text-base text-red-900 hover:-rotate-6 px-4 py-2 rounded-xl"
             onClick={printStruk}
           >
             Cetak Struk

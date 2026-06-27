@@ -36,7 +36,7 @@ export default function DnDGallery({ images, setImages }) {
               />
             </svg>
           </button>
-          <p className="absolute right-0 top-0 p-2 font-sef text-xl text-white bg-red-900/55 rounded-tr-lg w-10 text-center aspect-square">
+          <p className="absolute right-0 top-0 p-2 text-xl text-white bg-red-900/55 rounded-tr-lg w-10 text-center aspect-square">
             {index}
           </p>
           <img src={img} className="w-full rounded-xl" />

@@ -23,7 +23,7 @@ export default function Login() {
   return (
     <main className="w-screen h-screen flex flex-col justify-center items-center bg-red-900 bg-halftone gap-6">
       <img src={Logo} width={240} fetchPriority="high" alt="Logo" />
-      <GoogleLoginButton className={"w-60 font-sef text-xl"} />
+      <GoogleLoginButton className={"w-60 text-base"} />
     </main>
   );
 }

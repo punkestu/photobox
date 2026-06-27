@@ -74,12 +74,12 @@ export default function FrameSelect() {
       </aside>
       <aside className="col-span-3 md:col-span-2 m-2 p-4 border-2 border-red-700 rounded-xl overflow-auto relative">
         {!selectedFrame && (
-          <p className="bg-white p-4 rounded-lg text-center h-full flex justify-center items-center font-sef text-3xl text-red-900">
+          <p className="bg-white p-4 rounded-lg text-center h-full flex justify-center items-center text-xl text-red-900">
             Pilih frame terlebih dahulu!
           </p>
         )}
         {frameLoading && (
-          <p className="bg-white p-4 rounded-lg text-center h-full flex justify-center items-center font-sef text-3xl text-red-900">
+          <p className="bg-white p-4 rounded-lg text-center h-full flex justify-center items-center text-xl text-red-900">
             Memproses...
           </p>
         )}
@@ -91,10 +91,10 @@ export default function FrameSelect() {
       </aside>
       <div className="absolute bottom-0 left-0 w-full flex justify-end p-4 z-20">
         <button
-          className="px-4 py-2 bg-white font-sef text-2xl text-red-900 border-2 border-red-900 rounded-xl"
+          className="px-4 py-2 bg-white text-xl text-red-900 border-2 border-red-900 rounded-xl"
           onClick={finish}
         >
-          Lanjut...
+          Lanjut &raquo;
         </button>
       </div>
     </main>
@@ -116,7 +116,7 @@ function Frames({ selectedFrame, setSelectedFrame }) {
 
   if (isLoading) {
     return (
-      <p className="h-full w-full flex justify-center items-center bg-white text-red-900 font-sef text-3xl rounded-lg col-span-1 md:col-span-2 lg:col-span-3 p-4">
+      <p className="h-full w-full flex justify-center items-center bg-white text-red-900 text-xl rounded-lg col-span-1 md:col-span-2 lg:col-span-3 p-4">
         Loading...
       </p>
     );
