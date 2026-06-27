@@ -47,14 +47,12 @@ export default function Preview() {
     loadImages();
   }, [selectedFrame, images]);
   return (
-    <main className="h-screen w-screen bg-red-900 bg-halftone p-4 flex gap-2">
-      <aside className="w-140 h-full overflow-y-auto bg-white p-4 rounded-lg">
+    <main className="h-screen w-screen bg-red-900 bg-halftone p-4 grid md:grid-cols-3 gap-2">
+      <aside className="overflow-y-auto bg-white p-4 rounded-lg">
         <canvas ref={canvasRef} className="w-full"></canvas>
       </aside>
-      <aside className="grow h-full flex justify-center items-center">
-        {gif && (
-          <img src={gif} alt="GIF" className="w-1/2 bg-white p-4 rounded-lg" />
-        )}
+      <aside className="md:col-span-2 h-full flex justify-center items-center">
+        {gif && <img src={gif} alt="GIF" className="bg-white p-4 rounded-lg" />}
       </aside>
       <img
         src={LogoTypo}

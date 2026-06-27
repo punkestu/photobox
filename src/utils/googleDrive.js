@@ -1,8 +1,8 @@
-export const postImage = async (images, credential) => {
+export const postImage = async (images, credential, hook = (state) => { console.log(state) }) => {
   let retry = 0;
   while (retry < 3) {
     try {
-      const result = await postImageFn(images, credential);
+      const result = await postImageFn(images, credential, hook);
       return result;
     } catch (e) {
       console.error(e);
@@ -12,9 +12,10 @@ export const postImage = async (images, credential) => {
   throw new Error("Failed to upload image. Call admin");
 }
 
-const postImageFn = async (images, credential) => {
+const postImageFn = async (images, credential, hook) => {
   const folderName = "PhotoboxMicroapesTest";
 
+  hook({ message: "Booking Your Memory's Space..." });
   let folder = await checkFolder(folderName, credential);
   if (folder.length == 0) {
     await createFolder(folderName, credential);
@@ -45,6 +46,7 @@ const postImageFn = async (images, credential) => {
     await makeFolderPublic(folderCustomer[0].id, credential);
   }
 
+  hook({ message: "Saving Your Memories..." });
   await Promise.all(
     images.map((image, index) => {
       return createImage(
@@ -56,6 +58,8 @@ const postImageFn = async (images, credential) => {
       );
     }),
   );
+
+  hook({ message: "Memory Saved With Us!!" })
 
   return `https://drive.google.com/drive/folders/${folderCustomer[0].id}`;
 };

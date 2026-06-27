@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Logo from "../assets/Logo_border_120px.webp";
 import LogoTypo from "../assets/Logo_border_typo_180px.webp";
 
-export default function Loading() {
+export default function Loading({ message }) {
   const [tick, setTick] = useState(3);
   useEffect(() => {
     const intervalID = setInterval(() => {
@@ -20,9 +20,12 @@ export default function Loading() {
           fetchPriority="high"
           className="animate-[wiggle_1s_steps(2,end)_infinite]"
         />
-        <div className="text-white font-sef text-4xl">
+        <div className="text-white font-sef text-4xl text-center">
           Tunggu bentar yaaa.{new Array(tick).fill(null).map(() => ".")}
         </div>
+        <p className="text-white font-sef text-sm text-center">
+          {message ?? ""}
+        </p>
       </div>
       <img
         src={LogoTypo}

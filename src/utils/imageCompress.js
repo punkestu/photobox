@@ -5,13 +5,7 @@ export async function compressDataUrl(
     maxSizeMB = 3,
     maxWidthOrHeight = 1920
 ) {
-    // Convert Data URL -> File
-    const response = await fetch(dataUrl);
-    const blob = await response.blob();
-
-    const file = new File([blob], "image", {
-        type: blob.type || "image/jpeg",
-    });
+    const file = urlToFile(dataUrl, "buffer");
 
     // Compress
     const compressedFile = await imageCompression(file, {
@@ -23,4 +17,22 @@ export async function compressDataUrl(
 
     // Convert back to Data URL
     return imageCompression.getDataUrlFromFile(compressedFile);
+}
+
+function urlToFile(dataUrl, fileName) {
+    const [header, base64] = dataUrl.split(",");
+    const mime = header.match(/:(.*?);/)?.[1] || "";
+
+    const binary = atob(base64);
+    const len = binary.length;
+
+    const buffer = new Uint8Array(len);
+
+    for (let i = 0; i < len; i++) {
+        buffer[i] = binary.charCodeAt(i);
+    }
+
+    return new File([new Blob([buffer], { type: mime })], fileName, {
+        type: mime,
+    });
 }

@@ -20,6 +20,7 @@ export default function Upload() {
   const [selectedFrame] = useContext(frameProvider);
   const [framedImage, setFramedImage] = useState("");
   const [gifImage, setGifImage] = useState("");
+  const [uploadMessage, setUploadMessage] = useState("Processing...");
   const navigate = useNavigate();
   const print = () => {
     const win = window.open("", "_blank");
@@ -89,14 +90,19 @@ export default function Upload() {
         const gif = await renderGIF(loaded);
         setGifImage(URL.createObjectURL(gif));
 
+        const compressedImages = await Promise.all(
+          images.map((image) => compressDataUrl(image, 5)),
+        );
+        const compressedFramedImage = await compressDataUrl(framedImage, 5);
+
         await postImage(
           [
-            ...images.map((image) => ({
-              data: compressDataUrl(image, 1),
+            ...compressedImages.map((image) => ({
+              data: image,
               type: "url",
             })),
             {
-              data: compressDataUrl(framedImage, 3),
+              data: compressedFramedImage,
               type: "url",
               name: "framed.png",
             },
@@ -108,6 +114,9 @@ export default function Upload() {
             },
           ],
           credential,
+          ({ message }) => {
+            setUploadMessage(message);
+          },
         )
           .then((url) => {
             setUrl(url);
@@ -126,7 +135,7 @@ export default function Upload() {
     return (
       <>
         <canvas ref={canvasRef} style={{ display: "none" }}></canvas>
-        <Loading />
+        <Loading message={uploadMessage} />
       </>
     );
   }

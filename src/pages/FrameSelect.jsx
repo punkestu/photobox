@@ -63,8 +63,8 @@ export default function FrameSelect() {
   };
 
   return (
-    <main className="h-screen w-screen bg-red-900 bg-halftone flex">
-      <aside className="w-1/2 md:w-2/3 p-2 m-2 border-2 border-red-700 rounded-xl overflow-auto">
+    <main className="h-screen w-screen bg-red-900 bg-halftone grid grid-cols-6">
+      <aside className="col-span-3 md:col-span-4 p-2 m-2 border-2 border-red-700 rounded-xl overflow-auto">
         <div className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 relative">
           <Frames
             selectedFrame={selectedFrame}
@@ -72,7 +72,7 @@ export default function FrameSelect() {
           />
         </div>
       </aside>
-      <aside className="grow m-2 p-4 border-2 border-red-700 rounded-xl overflow-auto relative">
+      <aside className="col-span-3 md:col-span-2 m-2 p-4 border-2 border-red-700 rounded-xl overflow-auto relative">
         {!selectedFrame && (
           <p className="bg-white p-4 rounded-lg text-center h-full flex justify-center items-center font-sef text-3xl text-red-900">
             Pilih frame terlebih dahulu!
