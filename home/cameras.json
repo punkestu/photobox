@@ -1,44 +1,31 @@
 [
   {
-    "id": "sony-a7iii",
-    "name": "Sony A7 III Body",
-    "description": "Full-frame mirrorless camera, great for low light and video.",
-    "pricePerDay": 250000,
-    "youtubeUrl": "https://youtu.be/mji-B1Fm6-4?si=QbZnsj0c0q0aufyZ",
-    "calendarUrl": "https://calendar.google.com/calendar/embed?height=600&wkst=1&ctz=Asia%2FJakarta&showPrint=0&title=Camera%201&src=NDcxZjEyNTBlYWUyM2Q1MmM3OGRmNWI2Y2ZlYzVhNDdhOTYwZDRlMzJiNTE3MDUzMTc2YzRkZWI0ZjI5YWRiNEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&color=%23d50000",
-    "image": "https://images.unsplash.com/photo-1516961642265-531546e84af2?auto=format&fit=crop&q=80&w=600&h=400",
+    "id": "olympus-vg-180",
+    "name": "Olympus VG-180",
+    "description": "Abadikan setiap momen dengan Olympus VG-180. Kamera digital 16 MP dengan zoom optik 5x yang menghasilkan foto tajam dan video HD, praktis dibawa ke mana saja.",
+    "pricePerDay": 40000,
+    "calendarUrl": "https://calendar.google.com/calendar/embed?height=600&wkst=1&ctz=UTC&showPrint=0&src=ZWNob291dGRvb3IuYndpQGdtYWlsLmNvbQ&src=NDdkYjU1ODU2ZGI3NzU0ZmI0ODBkOWFiZmY2NmZkZGQwMjkxMzU1NmE0MmQ4OTEyNTgzZmEwN2FjZDNjNmZkZEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=aWQuaW5kb25lc2lhbiNob2xpZGF5QGdyb3VwLnYuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=ZW4uaW5kb25lc2lhbiNob2xpZGF5QGdyb3VwLnYuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&color=%23039be5&color=%23795548&color=%230b8043&color=%230b8043",
+    "image": "https://raw.githubusercontent.com/punkestu/soreaja-assets/refs/heads/main/olympusv180/face2.jpeg",
     "images": [
-      "https://images.unsplash.com/photo-1516961642265-531546e84af2?auto=format&fit=crop&q=80&w=600&h=400",
-      "https://images.unsplash.com/photo-1516961642265-531546e84af2?auto=format&fit=crop&q=80&w=600&h=400",
-      "https://images.unsplash.com/photo-1516961642265-531546e84af2?auto=format&fit=crop&q=80&w=600&h=400"
+      "https://raw.githubusercontent.com/punkestu/soreaja-assets/refs/heads/main/olympusv180/face1.jpeg"
     ]
   },
   {
-    "id": "canon-r5",
-    "name": "Canon EOS R5",
-    "description": "Professional full-frame mirrorless with 8K video capabilities.",
-    "pricePerDay": 450000,
-    "image": "https://images.unsplash.com/photo-1617005082833-1eb5857189f7?auto=format&fit=crop&q=80&w=600&h=400"
+    "id": "rollei-compactline-302",
+    "name": "Rollei Compactline 302",
+    "description": "Temukan keseruan memotret dengan Rollei Compactline 302. Desain ringkas, mudah digunakan, dan siap mengabadikan setiap momen spontan dengan hasil yang jernih dan penuh cerita.",
+    "pricePerDay": 35000,
+    "calendarUrl": "https://calendar.google.com/calendar/embed?height=600&wkst=1&ctz=UTC&showPrint=0&src=NDdkYjU1ODU2ZGI3NzU0ZmI0ODBkOWFiZmY2NmZkZGQwMjkxMzU1NmE0MmQ4OTEyNTgzZmEwN2FjZDNjNmZkZEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=NjA4ZjI1Mjc3NDhjMWIzNTQwNzFkMTAxOGJkNjFlYzU0ZjM1MjFjZDM5MjQzMjU2Zjg2YjhhYzlhMzEyYTZlY0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=YzY3MmQ1MmFiMmViYjFjZDI3NmQ5ZTdlYzAyOTVkZGM3NWI3ZDI1ZjJjODUzZGMzMWMyNmMzYmEwNDRhYTY1NUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=aWQuaW5kb25lc2lhbiNob2xpZGF5QGdyb3VwLnYuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=ZW4uaW5kb25lc2lhbiNob2xpZGF5QGdyb3VwLnYuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&color=%23795548&color=%237986cb&color=%23c0ca33&color=%230b8043&color=%230b8043",
+    "image": "https://raw.githubusercontent.com/punkestu/soreaja-assets/refs/heads/main/rolleicompactline302/face1.jpeg",
+    "images": []
   },
   {
-    "id": "fuji-xt4",
-    "name": "Fujifilm X-T4",
-    "description": "APS-C mirrorless with classic dial controls and film simulations.",
-    "pricePerDay": 300000,
-    "image": "https://images.unsplash.com/photo-1638848493630-f655cc829ccb?auto=format&fit=crop&q=80&w=600&h=400"
-  },
-  {
-    "id": "sony-lens-2470",
-    "name": "Sony FE 24-70mm f/2.8 GM",
-    "description": "Versatile standard zoom lens for Sony E-mount.",
-    "pricePerDay": 150000,
-    "image": "https://images.unsplash.com/photo-1617005082533-c40d16c02eb1?auto=format&fit=crop&q=80&w=600&h=400"
-  },
-  {
-    "id": "dji-mavic-air-2",
-    "name": "DJI Mavic Air 2",
-    "description": "Compact drone with 4K video and intelligent shooting modes.",
-    "pricePerDay": 350000,
-    "image": "https://images.unsplash.com/photo-1579824228135-430983ee23b2?auto=format&fit=crop&q=80&w=600&h=400"
+    "id": "sony-cybershot-dsc-w530",
+    "name": "Sony CyberShot DSC-W530",
+    "description": "Jangan biarkan momen berharga berlalu begitu saja. Sony Cyber-shot DSC-W530 hadir dengan desain praktis dan pengoperasian sederhana, siap menemani setiap perjalanan dan kenangan Anda.",
+    "pricePerDay": 40000,
+    "calendarUrl": "https://calendar.google.com/calendar/embed?height=600&wkst=1&ctz=UTC&showPrint=0&src=NDdkYjU1ODU2ZGI3NzU0ZmI0ODBkOWFiZmY2NmZkZGQwMjkxMzU1NmE0MmQ4OTEyNTgzZmEwN2FjZDNjNmZkZEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=NjA4ZjI1Mjc3NDhjMWIzNTQwNzFkMTAxOGJkNjFlYzU0ZjM1MjFjZDM5MjQzMjU2Zjg2YjhhYzlhMzEyYTZlY0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=YzY3MmQ1MmFiMmViYjFjZDI3NmQ5ZTdlYzAyOTVkZGM3NWI3ZDI1ZjJjODUzZGMzMWMyNmMzYmEwNDRhYTY1NUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=aWQuaW5kb25lc2lhbiNob2xpZGF5QGdyb3VwLnYuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=ZW4uaW5kb25lc2lhbiNob2xpZGF5QGdyb3VwLnYuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&color=%23795548&color=%237986cb&color=%23c0ca33&color=%230b8043&color=%230b8043",
+    "image": "https://raw.githubusercontent.com/punkestu/soreaja-assets/refs/heads/main/sonydscw530/face.jpg",
+    "images": []
   }
 ]
