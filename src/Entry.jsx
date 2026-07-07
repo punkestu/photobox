@@ -4,6 +4,7 @@ import App from "./pages/App";
 import Login from "./pages/Login";
 import { lazy, Suspense } from "react";
 import AuthMiddleware from "./middlewares/Auth";
+import FrameExistsMiddleware from "./middlewares/FrameExists";
 
 const Welcome = lazy(() => import("./pages/Welcome"));
 const TestFrame = lazy(() => import("./pages/TestFrame"));
@@ -17,16 +18,18 @@ export function Entry() {
   return (
     <Suspense fallback={<Loading />}>
       <Routes>
-        <Route path="/" element={<Welcome />} />
         <Route path="/test-frame" element={<TestFrame />} />
         <Route path="/login" element={<Login />} />
         <Route path="/gallery/:folderId" element={<Gallery />} />
         <Route path="/gallery" element={<Navigate to={"/"} replace />} />
         <Route element={<AuthMiddleware />}>
+          <Route element={<FrameExistsMiddleware />}>
+            <Route path="/" element={<Welcome />} />
+            <Route path="/frame-select" element={<FrameSelect />} />
+          </Route>
           <Route path="/app" element={<App />} />
-          <Route path="/frame-select" element={<FrameSelect />} />
-          <Route path="/preview" element={<Preview />} />
           <Route path="/upload" element={<Upload />} />
+          <Route path="/preview" element={<Preview />} />
         </Route>
       </Routes>
     </Suspense>

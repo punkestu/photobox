@@ -5,6 +5,7 @@ import { renderImagesWithFrame } from "../utils/frameRender";
 import { renderGIF } from "../utils/gifRender";
 import LogoTypo from "../assets/Logo_border_typo_180px.webp";
 import { useNavigate } from "react-router";
+import { saveImage } from "../utils/cacheBrowser";
 
 export default function Preview() {
   const canvasRef = useRef(null);
@@ -15,6 +16,11 @@ export default function Preview() {
 
   useEffect(() => {
     if (!selectedFrame) return;
+
+    images.forEach((image, i) => {
+      saveImage("image_" + i, image);
+    });
+    saveImage("selectedFrame", selectedFrame);
 
     const loadImages = async () => {
       const loaded = await Promise.all(

@@ -1,6 +1,6 @@
 import { QRCodeCanvas } from "qrcode.react";
 import { useContext, useEffect, useRef, useState } from "react";
-import { useLocation, useNavigate } from "react-router";
+import { Navigate, useLocation, useNavigate } from "react-router";
 import { memoryProvider } from "../hooks/useMemoryProvider";
 import LogoTypo from "../assets/Logo_border_typo_180px.webp";
 import { postImage } from "../utils/googleDrive";
@@ -10,6 +10,7 @@ import { frameProvider } from "../hooks/useFrame";
 import { renderImagesWithFrame } from "../utils/frameRender";
 import { renderGIF } from "../utils/gifRender";
 import { compressDataUrl } from "../utils/imageCompress";
+import { deleteImage } from "../utils/cacheBrowser";
 
 export default function Upload() {
   const [url, setUrl] = useState("");
@@ -95,36 +96,43 @@ export default function Upload() {
         );
         const compressedFramedImage = await compressDataUrl(framedImage, 5);
 
-        await postImage(
-          [
-            ...compressedImages.map((image) => ({
-              data: image,
-              type: "url",
-            })),
-            {
-              data: compressedFramedImage,
-              type: "url",
-              name: "framed.png",
+        try {
+          await postImage(
+            [
+              ...compressedImages.map((image) => ({
+                data: image,
+                type: "url",
+              })),
+              {
+                data: compressedFramedImage,
+                type: "url",
+                name: "framed.png",
+              },
+              {
+                data: gif,
+                type: "blob",
+                mimetype: "image/gif",
+                name: "animated.gif",
+              },
+            ],
+            credential + "",
+            ({ message }) => {
+              setUploadMessage(message);
             },
-            {
-              data: gif,
-              type: "blob",
-              mimetype: "image/gif",
-              name: "animated.gif",
-            },
-          ],
-          credential,
-          ({ message }) => {
-            setUploadMessage(message);
-          },
-        )
-          .then((url) => {
-            setUrl(url);
-          })
-          .catch((e) => alert(e.message))
-          .finally(() => {
-            isUploadingRef.current = false;
-          });
+          )
+            .then((url) => {
+              setUrl(url);
+            })
+            .catch((e) => {
+              throw e;
+            });
+        } catch (e) {
+          alert(e.message);
+          return navigate("/preview");
+        }
+        await Promise.all(images.map((_, i) => deleteImage("image_" + i)));
+        await deleteImage("selectedFrame");
+        isUploadingRef.current = false;
       })();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
