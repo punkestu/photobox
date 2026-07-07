@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     waBtn.addEventListener('click', () => {
         if (!selectedProduct) return;
 
-        const adminPhone = "6281234567890"; // Ganti dengan nomor asli
+        const adminPhone = "6282257038056"; // Ganti dengan nomor asli
         const totalPrice = parseInt(selectedProduct.price) * rentalDays;
 
         const message = `Halo admin SoreAja! 📸\n\nSaya ingin menyewa:\n*${selectedProduct.name}*\n\nTanggal Pengambilan: ${startDateInput.value}\nTanggal Pengembalian: ${endDateInput.value}\nDurasi: ${rentalDays} Hari\n\nTotal Estimasi: *${formatCurrency(totalPrice)}*\n\nApakah unitnya tersedia?`;
