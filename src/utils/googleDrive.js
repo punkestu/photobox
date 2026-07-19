@@ -60,7 +60,7 @@ const postImageFn = async (images, credential, hook) => {
   );
 
   hook({ message: "Memory Saved With Us!!" })
-  return `https://drive.google.com/drive/folders/${folderCustomer[0].id}`;
+  return `https://gallery.soreaja.my.id/${folderCustomer[0].id}`;
 };
 
 async function checkFolder(folderName, credential, folderId = null) {

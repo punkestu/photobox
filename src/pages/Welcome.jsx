@@ -23,13 +23,15 @@ export default function Welcome() {
           Tekan untuk mulai
         </div>
       </button>
-      <img
-        src={LogoTypo}
-        width={180}
-        alt="Logo Typography"
-        fetchPriority="high"
-        className="absolute bottom-0 right-0 m-6"
-      />
+      <a href="https://soreaja.my.id">
+        <img
+          src={LogoTypo}
+          width={180}
+          alt="Logo Typography"
+          fetchPriority="high"
+          className="absolute bottom-0 right-0 m-6"
+        />
+      </a>
     </main>
   );
 }
