@@ -11,6 +11,7 @@ import { renderImagesWithFrame } from "../utils/frameRender";
 import { renderGIF } from "../utils/gifRender";
 import { compressDataUrl } from "../utils/imageCompress";
 import { deleteImage } from "../utils/cacheBrowser";
+import { PrintImage } from "../utils/cleanterdriver";
 
 export default function Upload() {
   const [url, setUrl] = useState("");
@@ -34,7 +35,8 @@ export default function Upload() {
     win.document.close();
   };
   const printStruk = () => {
-    alert("Coming soon!");
+    // alert("Coming soon!");
+    PrintImage(framedImage);
   };
 
   useEffect(() => {
