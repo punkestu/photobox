@@ -97,10 +97,10 @@ export default function Upload() {
         const gif = await renderGIF(loaded);
         setGifImage(URL.createObjectURL(gif));
 
-        const compressedImages = await Promise.all(
-          images.map((image) => compressDataUrl(image, 5)),
-        );
-        const compressedFramedImage = await compressDataUrl(framedImage, 5);
+        // const compressedImages = await Promise.all(
+        //   images.map((image) => compressDataUrl(image, 5)),
+        // );
+        // const compressedFramedImage = await compressDataUrl(framedImage, 5);
 
         // try {
         //   await postImage(
@@ -148,13 +148,13 @@ export default function Upload() {
   // if (url == "") {
   //   return (
   //     <>
-  //       <canvas ref={canvasRef} style={{ display: "none" }}></canvas>
   //       <Loading message={uploadMessage} />
   //     </>
   //   );
   // }
   return (
     <main className="w-screen h-screen flex gap-4 bg-red-900 bg-halftone relative">
+      <canvas ref={canvasRef} style={{ display: "none" }}></canvas>
       <div className="absolute right-0 top-0 z-20">
         <button
           className="hover:bg-blue-500 hover:text-white text-white/0 px-2 py-1 rounded-bl-lg"
