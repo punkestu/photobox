@@ -34,8 +34,6 @@ export async function PrintImage(base64Image) {
     try {
         const result = await printImage(base64Image);
         return result;
-    } catch (e) {
-        return e;
     } finally {
         isPrinting = false;
     }
