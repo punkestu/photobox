@@ -43,106 +43,106 @@ export default function Upload() {
       .catch((e) => alert(e.message));
   };
 
-  // useEffect(() => {
-  //   if (
-  //     location.pathname == "/upload" &&
-  //     images.length > 0 &&
-  //     !isUploadingRef.current
-  //   ) {
-  //     isUploadingRef.current = true;
-  //     console.log("upload");
-  //     const expiresAt = localStorage.getItem("credential_expires_at");
+  useEffect(() => {
+    if (
+      location.pathname == "/upload" &&
+      images.length > 0 &&
+      !isUploadingRef.current
+    ) {
+      isUploadingRef.current = true;
+      console.log("upload");
+      const expiresAt = localStorage.getItem("credential_expires_at");
 
-  //     // Expired → clear + login
-  //     if (expiresAt && Date.now() / 1000 >= parseInt(expiresAt) - 60) {
-  //       localStorage.removeItem("credential");
-  //       localStorage.removeItem("credential_expires_at");
-  //       setCredential(null);
-  //       navigate("/login");
-  //       return;
-  //     }
+      // Expired → clear + login
+      if (expiresAt && Date.now() / 1000 >= parseInt(expiresAt) - 60) {
+        localStorage.removeItem("credential");
+        localStorage.removeItem("credential_expires_at");
+        setCredential(null);
+        navigate("/login");
+        return;
+      }
 
-  //     (async () => {
-  //       console.log("start render");
-  //       const loaded = await Promise.all(
-  //         images.map((url) => {
-  //           return new Promise((resolve) => {
-  //             const img = new Image();
-  //             img.crossOrigin = "anonymous";
-  //             img.src = url;
-  //             img.onload = () => resolve(img);
-  //           });
-  //         }),
-  //       );
-  //       const frame = await new Promise((resolve) => {
-  //         const img = new Image();
-  //         img.crossOrigin = "anonymous";
-  //         img.src = selectedFrame.frame_url;
-  //         img.onload = () => resolve(img);
-  //       });
-  //       if (canvasRef.current) {
-  //         renderImagesWithFrame(
-  //           canvasRef.current,
-  //           loaded,
-  //           frame,
-  //           selectedFrame.positions,
-  //           false,
-  //         );
-  //       }
+      (async () => {
+        console.log("start render");
+        const loaded = await Promise.all(
+          images.map((url) => {
+            return new Promise((resolve) => {
+              const img = new Image();
+              img.crossOrigin = "anonymous";
+              img.src = url;
+              img.onload = () => resolve(img);
+            });
+          }),
+        );
+        const frame = await new Promise((resolve) => {
+          const img = new Image();
+          img.crossOrigin = "anonymous";
+          img.src = selectedFrame.frame_url;
+          img.onload = () => resolve(img);
+        });
+        if (canvasRef.current) {
+          renderImagesWithFrame(
+            canvasRef.current,
+            loaded,
+            frame,
+            selectedFrame.positions,
+            false,
+          );
+        }
 
-  //       console.log("end render");
-  //       const framedImage = canvasRef.current.toDataURL();
-  //       console.log("get framed image");
-  //       setFramedImage(framedImage);
-  //       const gif = await renderGIF(loaded);
-  //       setGifImage(URL.createObjectURL(gif));
+        console.log("end render");
+        const framedImage = canvasRef.current.toDataURL();
+        console.log("get framed image");
+        setFramedImage(framedImage);
+        const gif = await renderGIF(loaded);
+        setGifImage(URL.createObjectURL(gif));
 
-  //       const compressedImages = await Promise.all(
-  //         images.map((image) => compressDataUrl(image, 5)),
-  //       );
-  //       const compressedFramedImage = await compressDataUrl(framedImage, 5);
+        const compressedImages = await Promise.all(
+          images.map((image) => compressDataUrl(image, 5)),
+        );
+        const compressedFramedImage = await compressDataUrl(framedImage, 5);
 
-  //       try {
-  //         await postImage(
-  //           [
-  //             ...compressedImages.map((image) => ({
-  //               data: image,
-  //               type: "url",
-  //             })),
-  //             {
-  //               data: compressedFramedImage,
-  //               type: "url",
-  //               name: "framed.png",
-  //             },
-  //             {
-  //               data: gif,
-  //               type: "blob",
-  //               mimetype: "image/gif",
-  //               name: "animated.gif",
-  //             },
-  //           ],
-  //           credential + "",
-  //           ({ message }) => {
-  //             setUploadMessage(message);
-  //           },
-  //         )
-  //           .then((url) => {
-  //             setUrl(url);
-  //           })
-  //           .catch((e) => {
-  //             throw e;
-  //           });
-  //       } catch (e) {
-  //         alert(e.message);
-  //         return navigate("/preview");
-  //       }
-  //       await Promise.all(images.map((_, i) => deleteImage("image_" + i)));
-  //       await deleteImage("selectedFrame");
-  //       isUploadingRef.current = false;
-  //     })();
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [location.pathname]);
+        // try {
+        //   await postImage(
+        //     [
+        //       ...compressedImages.map((image) => ({
+        //         data: image,
+        //         type: "url",
+        //       })),
+        //       {
+        //         data: compressedFramedImage,
+        //         type: "url",
+        //         name: "framed.png",
+        //       },
+        //       {
+        //         data: gif,
+        //         type: "blob",
+        //         mimetype: "image/gif",
+        //         name: "animated.gif",
+        //       },
+        //     ],
+        //     credential + "",
+        //     ({ message }) => {
+        //       setUploadMessage(message);
+        //     },
+        //   )
+        //     .then((url) => {
+        //       setUrl(url);
+        //     })
+        //     .catch((e) => {
+        //       throw e;
+        //     });
+        // } catch (e) {
+        //   alert(e.message);
+        //   return navigate("/preview");
+        // }
+        // await Promise.all(images.map((_, i) => deleteImage("image_" + i)));
+        // await deleteImage("selectedFrame");
+        isUploadingRef.current = false;
+      })();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname]);
   const canvasRef = useRef(null);
 
   // if (url == "") {
